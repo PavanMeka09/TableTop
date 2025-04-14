@@ -3,17 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TableTop | Admin Dashboard</title>
-    <link rel="stylesheet" href="../assets/styles/tailwind.css">
+    <title>Dashboard | Admin</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
     <script>
-    // Dark mode toggle
-    const toggleDarkMode = () => {
-        document.documentElement.classList.toggle('dark');
-    };
 
     document.addEventListener('DOMContentLoaded', async () => {
         try {
@@ -39,10 +34,9 @@
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
-                    <h1 class="text-2xl font-bold text-amber-600">TableTop Admin</h1>
+                    <a href="dashboard.html" class="text-2xl font-bold text-amber-600">TableTop Admin</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button onclick="toggleDarkMode()" class="text-gray-700 dark:text-gray-300 hover:text-amber-600 transition-colors">Dark/Light</button>
                     <a href="../index.html" class="text-amber-600 hover:text-amber-700">
                         <i class="fas fa-sign-out-alt text-xl"></i>
                     </a>
@@ -55,7 +49,7 @@
         <div class="max-w-6xl mx-auto">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
                 <!-- Manage Menu Card -->
-                <a href="manage-menu.html" class="admin-card bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                <a href="menu.html" class="admin-card bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
                     <div class="text-center">
                         <div class="bg-amber-100 dark:bg-amber-900 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
                             <i class="fas fa-utensils text-3xl text-amber-600"></i>
@@ -66,7 +60,7 @@
                 </a>
 
                 <!-- Track Orders Card -->
-                <a href="admin-orders.html" class="admin-card bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                <a href="orders.html" class="admin-card bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
                     <div class="text-center">
                         <div class="bg-amber-100 dark:bg-amber-900 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
                             <i class="fas fa-clipboard-list text-3xl text-amber-600"></i>
@@ -77,7 +71,7 @@
                 </a>
 
                 <!-- Customer Feedback Card -->
-                <a href="customer-feedback.html" class="admin-card bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                <a href="feedback.html" class="admin-card bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
                     <div class="text-center">
                         <div class="bg-amber-100 dark:bg-amber-900 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
                             <i class="fas fa-comment-alt text-3xl text-amber-600"></i>
