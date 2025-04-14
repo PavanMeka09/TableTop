@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TableTop | Track Order</title>
+    <link rel="stylesheet" href="../assets/styles/tailwind.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-utensils text-amber-600 text-2xl"></i>
+                    <h1 class="text-2xl font-bold text-amber-600">TableTop</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="../pages/login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md">
+                        Login / Signup
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-3xl font-bold">Your Orders</h2>
+                <a href="../index.html" class="text-amber-600 hover:text-amber-700 flex items-center">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Home
+                </a>
+            </div>
+
+            <div class="grid grid-cols-1 gap-6">
+                <!-- Order Cards will be dynamically inserted here -->
+            </div>
+
+            <!-- Order Status Indicators -->
+            <div class="mt-8 p-6 bg-amber-50 rounded-xl">
+                <h4 class="font-semibold mb-4">Status Legend:</h4>
+                <div class="flex flex-wrap gap-4">
+                    <div class="flex items-center">
+                        <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm mr-2">Preparing</span>
+                        <i class="fas fa-utensils text-amber-600"></i>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2">On the Way</span>
+                        <i class="fas fa-motorcycle text-blue-600"></i>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm mr-2">Delivered</span>
+                        <i class="fas fa-check-circle text-green-600"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('../backend/order.php?action=get_orders');
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                const ordersContainer = document.querySelector('.grid');
+                ordersContainer.innerHTML = '';
+
+                data.forEach(order => {
+                    const orderCard = document.createElement('div');
+                    orderCard.className = 'bg-white rounded-xl shadow-md p-6';
+                    orderCard.innerHTML = `
+                        <div class='flex justify-between items-start mb-4'>
+                            <div>
+                                <div class='flex items-center mb-2'>
+                                    <i class='fas fa-receipt text-amber-600 mr-3'></i>
+                                    <h3 class='text-xl font-semibold'>Order #${order.id}</h3>
+                                </div>
+                                <span class='bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm'>${order.status}</span>
+                            </div>
+                            <p class='text-2xl font-bold text-amber-600'>₹${order.total_price}</p>
+                        </div>
+                        <div class='mb-6'>
+                            <h4 class='font-semibold mb-3'>Items:</h4>
+                            <div class='space-y-2'>
+                                ${order.items.map(item => `
+                                    <div class='flex justify-between'>
+                                        <span>${item.name} (${item.quantity}x)</span>
+                                        <span>₹${item.price * item.quantity}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    ordersContainer.appendChild(orderCard);
+                });
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TableTop | Admin Dashboard</title>
+    <link rel="stylesheet" href="../assets/styles/tailwind.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <script>
+    // Dark mode toggle
+    const toggleDarkMode = () => {
+        document.documentElement.classList.toggle('dark');
+    };
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const response = await fetch('../../backend/admin.php?action=get_quick_stats');
+            const data = await response.json();
+
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            document.querySelector('.quick-stats .pending-orders').textContent = data.pending_orders;
+            document.querySelector('.quick-stats .new-feedback').textContent = data.new_feedback;
+            document.querySelector('.quick-stats .menu-items').textContent = data.menu_items;
+        } catch (error) {
+            console.error('Error fetching quick stats:', error);
+        }
+    });
+    </script>
+
+    <nav class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-utensils text-amber-600 text-2xl"></i>
+                    <h1 class="text-2xl font-bold text-amber-600">TableTop Admin</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleDarkMode()" class="text-gray-700 dark:text-gray-300 hover:text-amber-600 transition-colors">Dark/Light</button>
+                    <a href="../index.html" class="text-amber-600 hover:text-amber-700">
+                        <i class="fas fa-sign-out-alt text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <!-- Manage Menu Card -->
+                <a href="manage-menu.html" class="admin-card bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                    <div class="text-center">
+                        <div class="bg-amber-100 dark:bg-amber-900 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-utensils text-3xl text-amber-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Manage Menu</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Add, edit or remove items from the menu</p>
+                    </div>
+                </a>
+
+                <!-- Track Orders Card -->
+                <a href="admin-orders.html" class="admin-card bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                    <div class="text-center">
+                        <div class="bg-amber-100 dark:bg-amber-900 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-clipboard-list text-3xl text-amber-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Track Orders</h3>
+                        <p class="text-gray-600 dark:text-gray-300">View and manage customer orders</p>
+                    </div>
+                </a>
+
+                <!-- Customer Feedback Card -->
+                <a href="customer-feedback.html" class="admin-card bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                    <div class="text-center">
+                        <div class="bg-amber-100 dark:bg-amber-900 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-comment-alt text-3xl text-amber-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Customer Feedback</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Read and respond to customer reviews</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
+                <h3 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Quick Overview</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-amber-50 dark:bg-amber-900 p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 dark:text-gray-300">Pending Orders</p>
+                                <p class="pending-orders text-3xl font-bold text-gray-900 dark:text-gray-100">12</p>
+                            </div>
+                            <i class="fas fa-clock text-3xl text-amber-600"></i>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50 dark:bg-amber-900 p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 dark:text-gray-300">New Feedback</p>
+                                <p class="new-feedback text-3xl font-bold text-gray-900 dark:text-gray-100">5</p>
+                            </div>
+                            <i class="fas fa-comment-dots text-3xl text-amber-600"></i>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50 dark:bg-amber-900 p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600 dark:text-gray-300">Menu Items</p>
+                                <p class="menu-items text-3xl font-bold text-gray-900 dark:text-gray-100">42</p>
+                            </div>
+                            <i class="fas fa-pizza-slice text-3xl text-amber-600"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

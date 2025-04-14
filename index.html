@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TableTop | Fine Dining Experience</title>
+    <link rel="stylesheet" href="assets/styles/tailwind.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-utensils text-amber-600 text-2xl"></i>
+                    <a href="./index.html"><h1 class="text-2xl font-bold text-amber-600">TableTop</h1></a>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#contact" class="text-gray-700 hover:text-amber-600 transition-colors"><i class="fa-solid fa-sun text-xl"></i></a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="pages/login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md">
+                        Login / Signup
+                    </a>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-700">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100">
+                <a href="#" class="block py-2 text-gray-700 hover:text-amber-600">Home</a>
+                <a href="pages/Menu.html" class="block py-2 text-gray-700 hover:text-amber-600">Menu</a>
+                <a href="pages/Reservations.html" class="block py-2 text-gray-700 hover:text-amber-600">Reservations</a>
+                <a href="#contact" class="block py-2 text-gray-700 hover:text-amber-600">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="bg-cover bg-center h-screen relative" style="background-image: url('assets/images/restaurant.jpg');">
+        <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+        <div class="container mx-auto h-full flex flex-col items-center justify-center text-center relative z-10 px-4">
+            <h2 class="text-white text-5xl md:text-6xl font-bold leading-tight mb-6 animate-fade-in">Exquisite Cuisine <br> Unforgettable Experience</h2>
+            <p class="text-white text-xl md:text-2xl max-w-2xl mx-auto mb-10">Savor the finest flavors crafted with passion by our award-winning chefs</p>
+            <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
+                <a href="pages/Menu.html" class="bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-lg transition-colors font-medium shadow-lg transform hover:scale-105 transition-transform">
+                    Order Online
+                </a>
+                <a href="pages/Reservations.html" class="bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-lg transition-colors font-medium transform hover:scale-105 transition-transform">
+                    Reserve a Table
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="py-20">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-bold text-center mb-16 relative">
+                <span class="inline-block border-b-4 border-amber-500 pb-2">Why Choose Us</span>
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="text-center p-8 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow transform hover:-translate-y-1 transition-transform">
+                    <div class="bg-amber-100 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-leaf text-3xl text-amber-600"></i>
+                    </div>
+                    <h4 class="text-2xl font-semibold mb-4">Fresh Ingredients</h4>
+                    <p class="text-gray-600">We source the finest ingredients from local farmers and suppliers to ensure quality and freshness in every dish.</p>
+                </div>
+                <div class="text-center p-8 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow transform hover:-translate-y-1 transition-transform">
+                    <div class="bg-amber-100 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-award text-3xl text-amber-600"></i>
+                    </div>
+                    <h4 class="text-2xl font-semibold mb-4">Award-Winning Chefs</h4>
+                    <p class="text-gray-600">Our culinary team of passionate chefs creates innovative dishes that delight and inspire.</p>
+                </div>
+                <div class="text-center p-8 bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow transform hover:-translate-y-1 transition-transform">
+                    <div class="bg-amber-100 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
+                        <i class="fas fa-glass-cheers text-3xl text-amber-600"></i>
+                    </div>
+                    <h4 class="text-2xl font-semibold mb-4">Elegant Atmosphere</h4>
+                    <p class="text-gray-600">Experience fine dining in our carefully designed space that balances luxury and comfort.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-gray-100">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-bold text-center mb-4 relative">
+                <span class="inline-block border-b-4 border-amber-500 pb-2">Our Signature Dishes</span>
+            </h3>
+            <p class="text-center text-gray-600 mb-16 max-w-2xl mx-auto">Explore our chef's recommendations and best-selling dishes</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow transform hover:-translate-y-1 transition-transform">
+                    <div class="h-56 bg-cover bg-center" style="background-image: url('https://flouringkitchen.com/wp-content/uploads/2021/11/BW1A9225.jpg')"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="text-2xl font-semibold">Truffle Risotto</h4>
+                            <span class="text-amber-600 font-medium text-lg">₹280</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Creamy Arborio rice with wild mushrooms, truffle oil, and aged Parmesan.</p>
+                        <div class="flex items-center text-amber-500">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span class="text-gray-500 ml-2">(124 reviews)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow transform hover:-translate-y-1 transition-transform">
+                    <div class="h-56 bg-cover bg-center" style="background-image: url('https://cdn.tasteatlas.com/images/dishes/c743bfff128340e5b1a24f1e333f59f2.jpg')"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="text-2xl font-semibold">Croissant</h4>
+                            <span class="text-amber-600 font-medium text-lg">₹340</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Pan-seared scallops with cauliflower purée, crispy pancetta and herb oil.</p>
+                        <div class="flex items-center text-amber-500">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span class="text-gray-500 ml-2">(98 reviews)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow transform hover:-translate-y-1 transition-transform">
+                    <div class="h-56 bg-cover bg-center" style="background-image: url('https://media-cdn2.greatbritishchefs.com/media/vqdlvov1/img9530.whqc_768x512q80.jpg')"></div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-center mb-3">
+                            <h4 class="text-2xl font-semibold">Chocolate Fondant</h4>
+                            <span class="text-amber-600 font-medium text-lg">₹1400</span>
+                        </div>
+                        <p class="text-gray-600 mb-4">Warm chocolate cake with a molten center, served with vanilla bean ice cream.</p>
+                        <div class="flex items-center text-amber-500">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span class="text-gray-500 ml-2">(156 reviews)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-16">
+                <a href="pages/Menu.html" class="inline-block bg-amber-600 hover:bg-amber-700 text-white px-10 py-4 rounded-lg transition-colors font-medium shadow-lg transform hover:scale-105 transition-transform">
+                    View Full Menu
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-20 bg-cover bg-center relative" style="background-image: url('assets/images/restaurant-interior.jpg')">
+        <div class="absolute inset-0 bg-black bg-opacity-70"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h3 class="text-3xl font-bold text-center mb-16 text-white relative">
+                <span class="inline-block border-b-4 border-amber-500 pb-2">What Our Guests Say</span>
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <div class="flex items-center text-amber-500 mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 mb-6">"The food was exceptional and the service impeccable. The truffle risotto was the best I've ever had. We'll definitely be coming back!"</p>
+                    <div class="flex items-center">
+                        <div class="h-14 w-14 rounded-full bg-gray-300 flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-gray-500"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold">Sarah Johnson</h5>
+                            <p class="text-gray-500 text-sm">April 2025</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <div class="flex items-center text-amber-500 mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-gray-600 mb-6">"Perfect anniversary dinner. The ambiance was romantic, the wine selection was superb, and the staff made our night truly special."</p>
+                    <div class="flex items-center">
+                        <div class="h-14 w-14 rounded-full bg-gray-300 flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-gray-500"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold">Michael & Lisa Chen</h5>
+                            <p class="text-gray-500 text-sm">March 2025</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <div class="flex items-center text-amber-500 mb-4">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                    </div>
+                    <p class="text-gray-600 mb-6">"A culinary journey that exceeded our expectations. The chef's tasting menu was creative and beautifully presented. Highly recommend!"</p>
+                    <div class="flex items-center">
+                        <div class="h-14 w-14 rounded-full bg-gray-300 flex items-center justify-center mr-4">
+                            <i class="fas fa-user text-gray-500"></i>
+                        </div>
+                        <div>
+                            <h5 class="font-semibold">David Thompson</h5>
+                            <p class="text-gray-500 text-sm">February 2025</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-amber-600 py-20">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="text-3xl font-bold text-white mb-6">Reserve Your Table Today</h3>
+            <p class="text-white text-xl mb-10 max-w-2xl mx-auto">Experience our exceptional cuisine and service.</p>
+            <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
+                <a href="tel:+915551234567" class="bg-transparent border-2 border-white hover:bg-white hover:text-amber-600 text-white px-10 py-4 rounded-lg transition-colors font-medium transform hover:scale-105 transition-transform">
+                    Book Online
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-20">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-bold text-center mb-16 relative">
+                <span class="inline-block border-b-4 border-amber-500 pb-2">Location</span>
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="bg-white p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold mb-6 text-amber-600">Find Us</h3>
+                    <div class="mb-8">
+                        <h4 class="font-semibold text-lg mb-3 flex items-center">
+                            <i class="fas fa-map-marker-alt text-amber-500 mr-3"></i>Address
+                        </h4>
+                        <p class="text-gray-600 ml-8">TableTop<br>Lovely Professional University<br>Phagwara, IN 144411</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-lg mb-3 flex items-center">
+                            <i class="fas fa-phone-alt text-amber-500 mr-3"></i>Contact
+                        </h4>
+                        <div class="ml-8">
+                            <p class="text-gray-600 mb-1">Phone: +91 1234567890</p>
+                            <p class="text-gray-600">Email: info@tabletop.com</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="h-96 rounded-xl overflow-hidden shadow-lg">
+                    <iframe class="w-full h-full" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6821.537659689623!2d75.69942934288683!3d31.254822197346396!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391a5f5e9c489cf3%3A0x4049a5409d53c300!2sLovely%20Professional%20University!5e0!3m2!1sen!2sin!4v1744048403300!5m2!1sen!2sin" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-800 text-white py-16">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div>
+                    <h4 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-utensils text-amber-500 mr-3"></i>
+                        TableTop
+                    </h4>
+                    <p class="text-gray-400 mb-6">Experience fine dining at its best with our award-winning cuisine and exceptional service.</p>
+                    <div class="flex space-x-5">
+                        <a href="https://github.com/PavanMeka09/TableTop" target="_blank" class="text-gray-400 hover:text-amber-500 transition-colors">
+                            <i class="fa-brands fa-github text-3xl"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="pages/Menu.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Our Menu</a></li>
+                        <li><a href="pages/Reservations.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Reservations</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Contact</h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <i class="fas fa-map-marker-alt mt-1 mr-3 text-amber-500"></i>
+                            <span class="text-gray-400">TableTop,
+                                Lovely Professional University,
+                                Phagwara, IN 144411 </span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-phone mr-3 text-amber-500"></i>
+                            <span class="text-gray-400">+91 1234567890</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i class="fas fa-envelope mr-3 text-amber-500"></i>
+                            <span class="text-gray-400">info@tabletop.com</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-12 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 TableTop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>
