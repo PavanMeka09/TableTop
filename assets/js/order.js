@@ -1,7 +1,25 @@
 // Order functionality
 
+// User-friendly toast feedback
+function showToast(msg, type = 'info') {
+    let toast = document.createElement('div');
+    toast.className = `fixed bottom-8 right-8 z-50 px-6 py-3 rounded shadow-lg text-white font-semibold ${type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-amber-600'}`;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => { toast.remove(); }, 3000);
+}
+
 // Place an order
 async function placeOrder(items) {
+    if (!Array.isArray(items) || items.length === 0) {
+        showToast('No items to order.', 'error');
+        return;
+    }
+    const btn = document.getElementById('placeOrderBtn');
+    if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Placing...';
+    }
     try {
         const response = await fetch('../backend/order.php', {
             method: 'POST',
@@ -10,13 +28,17 @@ async function placeOrder(items) {
         });
         const data = await response.json();
         if (data.error) {
-            alert(data.error);
+            showToast(data.error, 'error');
         } else {
-            alert('Order placed successfully!');
-            console.log(data); // Replace with redirect or UI update
+            showToast('Order placed successfully!', 'success');
+            // Optionally redirect or update UI
         }
     } catch (error) {
-        console.error('Error placing order:', error);
+        showToast('Error placing order.', 'error');
+    }
+    if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'Place Order';
     }
 }
 

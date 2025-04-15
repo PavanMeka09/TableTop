@@ -1,7 +1,20 @@
 // Main functionality for login and registration
 
+// User-friendly toast feedback
+function showToast(msg, type = 'info') {
+    let toast = document.createElement('div');
+    toast.className = `fixed bottom-8 right-8 z-50 px-6 py-3 rounded shadow-lg text-white font-semibold ${type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-amber-600'}`;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => { toast.remove(); }, 3000);
+}
+
 // Login function
 async function login(email, password) {
+    if (!email || !password) {
+        showToast('Email and password are required.', 'error');
+        return;
+    }
     try {
         const response = await fetch('../backend/auth.php', {
             method: 'POST',
@@ -10,19 +23,23 @@ async function login(email, password) {
         });
         const data = await response.json();
         if (data.error) {
-            alert(data.error);
+            showToast(data.error, 'error');
         } else {
-            alert('Login successful!');
+            showToast('Login successful!', 'success');
             sessionStorage.setItem('role', data.role);
             window.location.href = data.role === 'admin' ? '../pages/admin/dashboard.html' : '../index.html';
         }
     } catch (error) {
-        console.error('Error during login:', error);
+        showToast('Error during login.', 'error');
     }
 }
 
 // Register function
 async function register(name, email, password) {
+    if (!name || !email || !password) {
+        showToast('All fields are required.', 'error');
+        return;
+    }
     try {
         const response = await fetch('../backend/auth.php', {
             method: 'POST',
@@ -31,13 +48,13 @@ async function register(name, email, password) {
         });
         const data = await response.json();
         if (data.error) {
-            alert(data.error);
+            showToast(data.error, 'error');
         } else {
-            alert('Registration successful! Please log in.');
+            showToast('Registration successful! Please log in.', 'success');
             window.location.href = '../pages/login.html';
         }
     } catch (error) {
-        console.error('Error during registration:', error);
+        showToast('Error during registration.', 'error');
     }
 }
 
@@ -51,17 +68,21 @@ async function logout() {
         });
         const data = await response.json();
         if (data.success) {
-            alert('Logged out successfully!');
+            showToast('Logged out successfully!', 'success');
             sessionStorage.clear();
             window.location.href = '../index.html';
         }
     } catch (error) {
-        console.error('Error during logout:', error);
+        showToast('Error during logout.', 'error');
     }
 }
 
 // Submit feedback
 async function submitFeedback(message, rating) {
+    if (!message || !rating) {
+        showToast('Message and rating are required.', 'error');
+        return;
+    }
     try {
         const response = await fetch('../backend/feedback.php', {
             method: 'POST',
@@ -70,12 +91,12 @@ async function submitFeedback(message, rating) {
         });
         const data = await response.json();
         if (data.error) {
-            alert(data.error);
+            showToast(data.error, 'error');
         } else {
-            alert('Feedback submitted successfully!');
+            showToast('Feedback submitted successfully!', 'success');
         }
     } catch (error) {
-        console.error('Error submitting feedback:', error);
+        showToast('Error submitting feedback.', 'error');
     }
 }
 

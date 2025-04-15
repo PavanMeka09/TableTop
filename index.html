@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TableTop | Fine Dining Experience</title>
+    <title>TableTop | Fine Dining Restaurant</title>
+    <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -17,7 +18,7 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="pages/login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md">
-                        Login / Signup
+                        Login
                     </a>
                     <button id="mobile-menu-button" class="md:hidden text-gray-700">
                         <i class="fas fa-bars text-2xl"></i>
@@ -267,32 +268,9 @@
         </div>
     </section>
 
-    <footer class="bg-gray-800 text-white py-16">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div>
-                    <h4 class="text-2xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-utensils text-amber-500 mr-3"></i>
-                        TableTop
-                    </h4>
-                    <p class="text-gray-400 mb-6">Experience fine dining at its best with our award-winning cuisine and exceptional service.</p>
-                    <div class="flex space-x-5">
-                        <a href="https://github.com/PavanMeka09/TableTop" target="_blank" class="text-gray-400 hover:text-amber-500 transition-colors">
-                            <i class="fa-brands fa-github text-3xl"></i>
-                        </a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
-                    <ul class="space-y-3">
-                        <li><a href="pages/menu.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Our Menu</a></li>
-                        <li><a href="pages/reservations.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Reservations</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-12 pt-8 text-center">
-                <p class="text-gray-400">&copy; 2025 TableTop. All rights reserved.</p>
-            </div>
+    <footer class="bg-gray-900 text-gray-300">
+        <div class="border-t border-gray-800 p-3 text-center text-xs text-gray-500">
+            &copy; 2025 TableTop. All rights reserved.
         </div>
     </footer>
 
@@ -301,6 +279,74 @@
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.toggle('hidden');
         });
+
+        // Session check and UI update
+        async function checkSessionAndUpdateUI() {
+            const nav = document.querySelector('nav .flex.items-center.space-x-4');
+            const orderBtn = document.querySelector('a[href="pages/menu.html"]');
+            const reserveBtn = document.querySelector('a[href="pages/reservations.html"]');
+            let loginBtn = nav.querySelector('a[href="pages/login.html"]');
+            if (!loginBtn) loginBtn = nav.querySelector('a[href="../pages/login.html"]');
+            // Remove existing logout if any
+            let logoutBtn = nav.querySelector('.logout-btn');
+            if (logoutBtn) logoutBtn.remove();
+
+            try {
+                const res = await fetch('backend/auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ action: 'check_session' })
+                });
+                const data = await res.json();
+                if (data.logged_in) {
+                    // Hide login, show logout
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    const logout = document.createElement('a');
+                    logout.textContent = 'Logout';
+                    logout.href = '#';
+                    logout.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md logout-btn';
+                    logout.onclick = async function(e) {
+                        e.preventDefault();
+                        await fetch('backend/auth.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: new URLSearchParams({ action: 'logout' })
+                        });
+                        window.location.reload();
+                    };
+                    nav.insertBefore(logout, nav.querySelector('#mobile-menu-button'));
+                    // Enable order/reserve
+                    if (orderBtn) orderBtn.style.pointerEvents = 'auto';
+                    if (reserveBtn) reserveBtn.style.pointerEvents = 'auto';
+                    if (orderBtn) orderBtn.classList.remove('opacity-50', 'pointer-events-none');
+                    if (reserveBtn) reserveBtn.classList.remove('opacity-50', 'pointer-events-none');
+                } else {
+                    // Show login, hide logout
+                    if (loginBtn) loginBtn.style.display = '';
+                    // Disable order/reserve
+                    if (orderBtn) {
+                        orderBtn.style.pointerEvents = 'none';
+                        orderBtn.classList.add('opacity-50', 'pointer-events-none');
+                    }
+                    if (reserveBtn) {
+                        reserveBtn.style.pointerEvents = 'none';
+                        reserveBtn.classList.add('opacity-50', 'pointer-events-none');
+                    }
+                }
+            } catch (e) {
+                // fallback: show login, disable order/reserve
+                if (loginBtn) loginBtn.style.display = '';
+                if (orderBtn) {
+                    orderBtn.style.pointerEvents = 'none';
+                    orderBtn.classList.add('opacity-50', 'pointer-events-none');
+                }
+                if (reserveBtn) {
+                    reserveBtn.style.pointerEvents = 'none';
+                    reserveBtn.classList.add('opacity-50', 'pointer-events-none');
+                }
+            }
+        }
+        document.addEventListener('DOMContentLoaded', checkSessionAndUpdateUI);
     </script>
 </body>
 </html>

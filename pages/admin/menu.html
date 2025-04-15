@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menu | Admin</title>
+    <title>Menu Management | Admin</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-gray-50">
     <nav class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
@@ -16,291 +16,272 @@
                     <h1 class="text-2xl font-bold text-amber-600">TableTop Admin</h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="dashboard.html" class="text-amber-600 hover:text-amber-700">
-                        <i class="fas fa-arrow-left text-xl"></i>
-                    </a>
+                    <a href="dashboard.html" class="text-gray-700 hover:text-amber-600 transition-colors">Dashboard</a>
+                    <a href="menu.html" class="text-amber-600 font-semibold border-b-2 border-amber-600">Menu</a>
+                    <a href="orders.html" class="text-gray-700 hover:text-amber-600 transition-colors">Orders</a>
+                    <a href="feedback.html" class="text-gray-700 hover:text-amber-600 transition-colors">Feedback</a>
+                    <a href="reservations.html" class="text-gray-700 hover:text-amber-600 transition-colors">Reservations</a>
+                    <a href="../../pages/login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md login-btn">Login</a>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-700"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100">
+                <a href="dashboard.html" class="block py-2 text-gray-700 hover:text-amber-600">Dashboard</a>
+                <a href="menu.html" class="block py-2 text-amber-600 font-semibold border-b-2 border-amber-600">Menu</a>
+                <a href="orders.html" class="block py-2 text-gray-700 hover:text-amber-600">Orders</a>
+                <a href="feedback.html" class="block py-2 text-gray-700 hover:text-amber-600">Feedback</a>
+                <a href="reservations.html" class="block py-2 text-gray-700 hover:text-amber-600">Reservations</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-12">
+    <main class="container mx-auto p-6">
         <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-                <h2 class="text-3xl font-bold mb-4 md:mb-0">Manage Menu Items</h2>
-                <div class="w-full md:w-64 relative">
-                    <input type="text" id="searchInput" placeholder="Search items..." 
-                           class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:border-amber-500">
-                    <i class="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-900">Menu Items</h2>
+                <button onclick="openAddModal()" 
+                        class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md flex items-center">
+                    <i class="fas fa-plus mr-2"></i>
+                    Add Item
+                </button>
+            </div>
+
+            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" id="menuItems"></div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Modal -->
+    <div id="itemModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg max-w-md w-full mx-4 shadow-lg">
+            <h3 class="text-2xl font-bold mb-6" id="modalTitle">Add Menu Item</h3>
+            <form id="itemForm" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                    <input type="text" id="itemName" required 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
                 </div>
-            </div>
-
-            <!-- Add New Item Button -->
-            <button onclick="openItemForm()" 
-                    class="fixed bottom-8 right-8 bg-amber-600 hover:bg-amber-700 text-white p-4 rounded-full shadow-lg transform hover:scale-110 transition-all">
-                <i class="fas fa-plus text-2xl"></i>
-            </button>
-
-            <!-- Menu Items Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="menuItemsContainer">
-                <!-- Items will be dynamically loaded here -->
-            </div>
-
-            <!-- Item Form Modal -->
-            <div id="itemModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div class="bg-white rounded-xl p-8 max-w-md w-full">
-                    <h3 class="text-2xl font-bold mb-6" id="modalTitle">Add New Item</h3>
-                    <form id="itemForm" onsubmit="handleFormSubmit(event)">
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium mb-1">Item Name</label>
-                                <input type="text" id="itemName" required
-                                       class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-amber-500 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-1">Description</label>
-                                <textarea id="itemDescription" rows="3" required
-                                          class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-amber-500 focus:outline-none"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-1">Price (₹)</label>
-                                <input type="number" id="itemPrice" step="0.01" required
-                                       class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-amber-500 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium mb-1">Image URL</label>
-                                <input type="url" id="itemImage"
-                                       class="w-full px-4 py-2 rounded-lg border border-gray-200 focus:border-amber-500 focus:outline-none">
-                            </div>
-                        </div>
-                        <div class="flex justify-end space-x-4 mt-6">
-                            <button type="button" onclick="closeItemForm()"
-                                    class="px-6 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
-                            <button type="submit" 
-                                    class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg">Save Item</button>
-                        </div>
-                    </form>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea id="itemDescription" required 
+                              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"></textarea>
                 </div>
-            </div>
-
-            <!-- Delete Confirmation Modal -->
-            <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div class="bg-white rounded-xl p-8 max-w-md w-full text-center">
-                    <i class="fas fa-exclamation-triangle text-3xl text-red-500 mb-4"></i>
-                    <h3 class="text-xl font-bold mb-4">Delete Item</h3>
-                    <p class="text-gray-600 mb-6">Are you sure you want to delete this item? This action cannot be undone.</p>
-                    <div class="flex justify-center space-x-4">
-                        <button onclick="closeDeleteModal()" class="px-6 py-2 text-gray-600 hover:text-gray-800">Cancel</button>
-                        <button id="confirmDelete" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg">Delete</button>
-                    </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Price (₹)</label>
+                    <input type="number" id="itemPrice" required min="0" step="0.01" 
+                           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
                 </div>
-            </div>
+                <div class="flex justify-end gap-4 mt-8">
+                    <button type="button" onclick="closeModal()" 
+                            class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        Cancel
+                    </button>
+                    <button type="submit" 
+                            class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg transition-colors shadow-md">
+                        Save
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
+    <footer class="bg-gray-800 text-white py-16 mt-20">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div>
+                    <h4 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-utensils text-amber-500 mr-3"></i>
+                        TableTop
+                    </h4>
+                    <p class="text-gray-400 mb-6">Admin dashboard for TableTop restaurant management.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="dashboard.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Dashboard</a></li>
+                        <li><a href="menu.html" class="text-amber-500 flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Menu</a></li>
+                        <li><a href="orders.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Orders</a></li>
+                        <li><a href="feedback.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Feedback</a></li>
+                        <li><a href="reservations.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Reservations</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-12 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 TableTop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        let editItemId = null;
+
+        function openAddModal() {
+            editItemId = null;
+            document.getElementById('modalTitle').textContent = 'Add Menu Item';
+            document.getElementById('itemForm').reset();
+            document.getElementById('itemModal').classList.remove('hidden');
+        }
+
+        function openEditModal(item) {
+            editItemId = item.id;
+            document.getElementById('modalTitle').textContent = 'Edit Menu Item';
+            document.getElementById('itemName').value = item.name;
+            document.getElementById('itemDescription').value = item.description;
+            document.getElementById('itemPrice').value = item.price;
+            document.getElementById('itemCategory').value = item.category;
+            document.getElementById('itemModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('itemModal').classList.add('hidden');
+        }
+
+        document.getElementById('itemForm').onsubmit = async function(e) {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('name', document.getElementById('itemName').value);
+            formData.append('description', document.getElementById('itemDescription').value);
+            formData.append('price', parseFloat(document.getElementById('itemPrice').value));
+            formData.append('category', document.getElementById('itemCategory').value);
+            formData.append('action', editItemId ? 'update_menu_item' : 'add_menu_item');
+            if (editItemId) formData.append('id', editItemId);
+            // TODO: handle image upload
             try {
-                const response = await fetch('../../backend/menu.php?action=get_menu_items');
-                const data = await response.json();
-
-                if (data.error) {
-                    alert(data.error);
-                    return;
+                const res = await fetch('../../backend/menu.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Menu item saved!', 'success');
+                    closeModal();
+                    loadMenuItems();
+                } else {
+                    showToast(data.error || 'Failed to save item', 'error');
                 }
+            } catch (error) {
+                showToast('Failed to save item', 'error');
+            }
+        };
 
-                const menuItemsContainer = document.getElementById('menuItemsContainer');
-                menuItemsContainer.innerHTML = '';
+        async function deleteItem(id) {
+            if (!confirm('Are you sure you want to delete this item?')) return;
+            try {
+                const res = await fetch('../../backend/menu.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ action: 'delete_menu_item', id })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Menu item deleted!', 'success');
+                    loadMenuItems();
+                } else {
+                    showToast(data.error || 'Failed to delete item', 'error');
+                }
+            } catch (error) {
+                showToast('Failed to delete item', 'error');
+            }
+        }
 
-                data.forEach(item => {
-                    const menuItem = document.createElement('div');
-                    menuItem.className = 'bg-white rounded-xl shadow-md overflow-hidden';
-                    menuItem.innerHTML = `
-                        <div class='h-48 bg-cover bg-center' style='background-image: url(${item.image_url || 'https://via.placeholder.com/150'})'></div>
-                        <div class='p-6'>
-                            <div class='flex justify-between items-start mb-4'>
+        function loadMenuItems() {
+            fetch('../../backend/menu.php?action=get_menu')
+                .then(res => res.json())
+                .then(data => {
+                    const container = document.getElementById('menuItems');
+                    container.innerHTML = '';
+                    if (!data.data || data.data.length === 0) {
+                        container.innerHTML = '<p class="col-span-full text-center py-12 text-gray-500">No menu items found</p>';
+                        return;
+                    }
+                    data.data.forEach(item => {
+                        const div = document.createElement('div');
+                        div.className = 'bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow';
+                        div.innerHTML = `
+                            <div class="flex justify-between items-start mb-4">
                                 <div>
-                                    <h3 class='text-xl font-bold'>${item.name}</h3>
-                                    <p class='text-amber-600 font-semibold'>₹${item.price}</p>
+                                    <h3 class="text-xl font-bold text-gray-900">${item.name}</h3>
+                                    <span class="inline-block bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full mt-1">
+                                        ${item.category}
+                                    </span>
+                                </div>
+                                <div class="flex gap-3">
+                                    <button onclick='openEditModal(${JSON.stringify(item)})' 
+                                            class="text-gray-600 hover:text-amber-600 transition-colors">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button onclick="deleteItem(${item.id})" 
+                                            class="text-gray-600 hover:text-red-600 transition-colors">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
                                 </div>
                             </div>
-                            <p class='text-gray-600 mb-6'>${item.description}</p>
-                            <div class='flex justify-end space-x-4'>
-                                <button onclick="editItem(${item.id})" class='text-amber-600 hover:text-amber-700'>
-                                    <i class='fas fa-edit'></i>
-                                </button>
-                                <button onclick="deleteItem(${item.id})" class='text-red-500 hover:text-red-600'>
-                                    <i class='fas fa-trash'></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    menuItemsContainer.appendChild(menuItem);
+                            <p class="text-gray-600 text-sm mb-4">${item.description}</p>
+                            <p class="text-2xl font-bold text-amber-600">₹${item.price}</p>
+                        `;
+                        container.appendChild(div);
+                    });
                 });
-            } catch (error) {
-                console.error('Error fetching menu items:', error);
-            }
+        }
+
+        loadMenuItems();
+
+        // Close modal when clicking outside
+        document.getElementById('itemModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
         });
 
-        let menuItems = [];
-        let currentEditingId = null;
-
-        // Fetch menu items from the backend
-        async function fetchMenuItems() {
+        // Session check and UI update
+        async function checkSessionAndUpdateUI() {
+            const nav = document.querySelector('nav .flex.items-center.space-x-4');
+            let loginBtn = nav.querySelector('a.login-btn');
+            let logoutBtn = nav.querySelector('.logout-btn');
+            if (logoutBtn) logoutBtn.remove();
             try {
-                const response = await fetch('../../backend/menu.php?action=get_menu_items');
-                const result = await response.json();
-
-                if (result.status === 'success') {
-                    menuItems = result.data;
-                    renderMenuItems();
+                const res = await fetch('../../backend/auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ action: 'check_session' })
+                });
+                const data = await res.json();
+                if (data.logged_in && data.role === 'admin') {
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    const logout = document.createElement('a');
+                    logout.textContent = 'Logout';
+                    logout.href = '#';
+                    logout.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md logout-btn';
+                    logout.onclick = async function(e) {
+                        e.preventDefault();
+                        await fetch('../../backend/auth.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: new URLSearchParams({ action: 'logout' })
+                        });
+                        window.location.href = '../../index.html';
+                    };
+                    nav.appendChild(logout);
                 } else {
-                    alert(result.message || 'Failed to fetch menu items.');
+                    if (loginBtn) loginBtn.style.display = '';
+                    window.location.href = '../../pages/login.html';
                 }
-            } catch (error) {
-                console.error('Error fetching menu items:', error);
+            } catch (e) {
+                if (loginBtn) loginBtn.style.display = '';
+                window.location.href = '../../pages/login.html';
             }
         }
+        document.addEventListener('DOMContentLoaded', checkSessionAndUpdateUI);
 
-        // Initial load
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchMenuItems();
-        });
-
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            const filtered = menuItems.filter(item => 
-                item.name.toLowerCase().includes(searchTerm) || 
-                item.description.toLowerCase().includes(searchTerm)
-            );
-            renderMenuItems(filtered);
-        });
-
-        // Render menu items
-        function renderMenuItems(items = menuItems) {
-            const container = document.getElementById('menuItemsContainer');
-            container.innerHTML = items.map(item => `
-                <div class="bg-white rounded-xl shadow-md overflow-hidden">
-                    <div class="h-48 bg-cover bg-center" style="background-image: url(${item.image || 'https://via.placeholder.com/400x300'});"></div>
-                    <div class="p-6">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <h3 class="text-xl font-bold">${item.name}</h3>
-                                <p class="text-amber-600 font-semibold">₹${item.price}</p>
-                            </div>
-                        </div>
-                        <p class="text-gray-600 mb-6">${item.description}</p>
-                        <div class="flex justify-end space-x-4">
-                            <button onclick="editItem('${item.id}')" class="text-amber-600 hover:text-amber-700">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button onclick="openDeleteModal('${item.id}')" class="text-red-500 hover:text-red-600">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Form handling
-        function openItemForm(id = null) {
-            currentEditingId = id;
-            const modal = document.getElementById('itemModal');
-            modal.classList.remove('hidden');
-            
-            if(id) {
-                document.getElementById('modalTitle').textContent = 'Edit Item';
-                const item = menuItems.find(i => i.id === id);
-                document.getElementById('itemName').value = item.name;
-                document.getElementById('itemDescription').value = item.description;
-                document.getElementById('itemPrice').value = item.price;
-                document.getElementById('itemImage').value = item.image || '';
-            } else {
-                document.getElementById('modalTitle').textContent = 'Add New Item';
-                document.getElementById('itemForm').reset();
-            }
-        }
-
-        function closeItemForm() {
-            document.getElementById('itemModal').classList.add('hidden');
-            currentEditingId = null;
-        }
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            const itemData = {
-                name: document.getElementById('itemName').value,
-                description: document.getElementById('itemDescription').value,
-                price: parseFloat(document.getElementById('itemPrice').value).toFixed(2),
-                image: document.getElementById('itemImage').value
-            };
-
-            if (currentEditingId) {
-                // Update existing item
-                fetch(`../../backend/menu.php?action=update_menu_item&id=${currentEditingId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(itemData)
-                }).then(response => response.json())
-                  .then(data => {
-                      if (data.success) {
-                          fetchMenuItems();
-                          closeItemForm();
-                      } else {
-                          alert(data.error || 'Failed to update item.');
-                      }
-                  }).catch(error => console.error('Error updating item:', error));
-            } else {
-                // Add new item
-                fetch('../../backend/menu.php?action=add_menu_item', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(itemData)
-                }).then(response => response.json())
-                  .then(data => {
-                      if (data.success) {
-                          fetchMenuItems();
-                          closeItemForm();
-                      } else {
-                          alert(data.error || 'Failed to add item.');
-                      }
-                  }).catch(error => console.error('Error adding item:', error));
-            }
-        }
-
-        // Delete functionality
-        let itemToDelete = null;
-
-        function openDeleteModal(id) {
-            itemToDelete = id;
-            document.getElementById('deleteModal').classList.remove('hidden');
-        }
-
-        function closeDeleteModal() {
-            document.getElementById('deleteModal').classList.add('hidden');
-            itemToDelete = null;
-        }
-
-        document.getElementById('confirmDelete').addEventListener('click', () => {
-            if (itemToDelete) {
-                fetch(`../../backend/menu.php?action=delete_menu_item&id=${itemToDelete}`, {
-                    method: 'POST'
-                }).then(response => response.json())
-                  .then(data => {
-                      if (data.success) {
-                          fetchMenuItems();
-                          closeDeleteModal();
-                      } else {
-                          alert(data.error || 'Failed to delete item.');
-                      }
-                  }).catch(error => console.error('Error deleting item:', error));
-            }
-        });
-
-        function editItem(id) {
-            openItemForm(id);
+        // Toast feedback
+        function showToast(msg, type = 'info') {
+            let toast = document.createElement('div');
+            toast.className = `fixed bottom-8 right-8 z-50 px-6 py-3 rounded shadow-lg text-white font-semibold ${type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-amber-600'}`;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
         }
     </script>
 </body>

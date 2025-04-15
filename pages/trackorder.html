@@ -7,104 +7,73 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-gray-50">
     <nav class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-2">
+                <a href="../index.html" class="flex items-center space-x-2">
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
                     <h1 class="text-2xl font-bold text-amber-600">TableTop</h1>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <a href="login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md">
-                        Login / Signup
-                    </a>
+                </a>
+                <div class="flex items-center space-x-6">
+                    <a href="menu.html" class="text-gray-700 hover:text-amber-600 transition-colors">Menu</a>
+                    <a href="reservations.html" class="text-gray-700 hover:text-amber-600 transition-colors">Reservations</a>
+                    <a href="../backend/auth.php?action=logout" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md">Logout</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-12">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex items-center justify-between mb-8">
-                <h2 class="text-3xl font-bold">Your Orders</h2>
-                <a href="../index.html" class="text-amber-600 hover:text-amber-700 flex items-center">
-                    <i class="fas fa-arrow-left mr-2"></i>
-                    Back to Home
-                </a>
-            </div>
-
-            <div class="grid grid-cols-1 gap-6">
-                <!-- Order Cards will be dynamically inserted here -->
-            </div>
-
-            <!-- Order Status Indicators -->
-            <div class="mt-8 p-6 bg-amber-50 rounded-xl">
-                <h4 class="font-semibold mb-4">Status Legend:</h4>
-                <div class="flex flex-wrap gap-4">
-                    <div class="flex items-center">
-                        <span class="bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm mr-2">Preparing</span>
-                        <i class="fas fa-utensils text-amber-600"></i>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2">On the Way</span>
-                        <i class="fas fa-motorcycle text-blue-600"></i>
-                    </div>
-                    <div class="flex items-center">
-                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm mr-2">Delivered</span>
-                        <i class="fas fa-check-circle text-green-600"></i>
-                    </div>
+    <main class="container mx-auto p-4">
+        <div class="max-w-4xl mx-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl font-bold">Your Orders</h2>
+                <div class="flex gap-3">
+                    <span class="bg-amber-100 px-3 py-1 rounded-full text-sm font-medium text-amber-800">Preparing</span>
+                    <span class="bg-blue-100 px-3 py-1 rounded-full text-sm font-medium text-blue-800">On the Way</span>
+                    <span class="bg-green-100 px-3 py-1 rounded-full text-sm font-medium text-green-800">Delivered</span>
                 </div>
             </div>
+
+            <div id="orders" class="space-y-4"></div>
         </div>
-    </div>
+    </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const response = await fetch('../backend/order.php?action=get_orders');
-                const data = await response.json();
-
-                if (data.error) {
-                    alert(data.error);
+        fetch('../backend/order.php?action=get_orders')
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) return;
+                const ordersContainer = document.getElementById('orders');
+                if (data.length === 0) {
+                    ordersContainer.innerHTML = '<div class="text-center py-12"><p class="text-gray-500">No orders found</p></div>';
                     return;
                 }
-
-                const ordersContainer = document.querySelector('.grid');
-                ordersContainer.innerHTML = '';
-
                 data.forEach(order => {
-                    const orderCard = document.createElement('div');
-                    orderCard.className = 'bg-white rounded-xl shadow-md p-6';
-                    orderCard.innerHTML = `
-                        <div class='flex justify-between items-start mb-4'>
+                    const div = document.createElement('div');
+                    div.className = 'bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow';
+                    const statusColors = {
+                        'pending': 'bg-yellow-100 text-yellow-800',
+                        'preparing': 'bg-amber-100 text-amber-800',
+                        'on the way': 'bg-blue-100 text-blue-800',
+                        'delivered': 'bg-green-100 text-green-800'
+                    };
+                    div.innerHTML = `
+                        <div class="flex justify-between items-start mb-4">
                             <div>
-                                <div class='flex items-center mb-2'>
-                                    <i class='fas fa-receipt text-amber-600 mr-3'></i>
-                                    <h3 class='text-xl font-semibold'>Order #${order.id}</h3>
-                                </div>
-                                <span class='bg-amber-100 text-amber-800 px-3 py-1 rounded-full text-sm'>${order.status}</span>
+                                <h3 class="font-bold text-lg">Order #${order.id}</h3>
+                                <p class="text-sm text-gray-500 mt-1">Ordered on: ${new Date(order.created_at).toLocaleString()}</p>
                             </div>
-                            <p class='text-2xl font-bold text-amber-600'>₹${order.total_price}</p>
+                            <span class="px-3 py-1 rounded-full text-sm font-medium ${statusColors[order.status] || 'bg-gray-100 text-gray-800'}">${order.status}</span>
                         </div>
-                        <div class='mb-6'>
-                            <h4 class='font-semibold mb-3'>Items:</h4>
-                            <div class='space-y-2'>
-                                ${order.items.map(item => `
-                                    <div class='flex justify-between'>
-                                        <span>${item.name} (${item.quantity}x)</span>
-                                        <span>₹${item.price * item.quantity}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
+                        <div class="flex justify-between items-center">
+                            <p class="text-xl font-bold text-amber-600">₹${order.total_price}</p>
+                            <button class="text-sm text-amber-600 hover:text-amber-700 font-medium">View Details</button>
                         </div>
                     `;
-                    ordersContainer.appendChild(orderCard);
+                    ordersContainer.appendChild(div);
                 });
-            } catch (error) {
-                console.error('Error fetching orders:', error);
-            }
-        });
+            });
     </script>
 </body>
 </html>

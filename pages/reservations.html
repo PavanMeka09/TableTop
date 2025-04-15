@@ -7,201 +7,202 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
-    <script>
-        // Dark mode toggle
-        const toggleDarkMode = () => {
-            document.documentElement.classList.toggle('dark');
-        };
-    </script>
-    <nav class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-2">
+                <a href="../index.html" class="flex items-center space-x-2">
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
                     <h1 class="text-2xl font-bold text-amber-600">TableTop</h1>
-                </div>
+                </a>
                 <div class="flex items-center space-x-4">
-                    <a href="login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md">
-                        Login / Signup
-                    </a>
+                    <a href="menu.html" class="text-gray-700 hover:text-amber-600 transition-colors">Menu</a>
+                    <a href="reservations.html" class="text-amber-600 font-semibold border-b-2 border-amber-600">Reservations</a>
+                    <a href="trackorder.html" class="text-gray-700 hover:text-amber-600 transition-colors">Track Order</a>
+                    <a href="login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md login-btn">Login</a>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-700"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100">
+                <a href="menu.html" class="block py-2 text-gray-700 hover:text-amber-600">Menu</a>
+                <a href="reservations.html" class="block py-2 text-amber-600 font-semibold border-b-2 border-amber-600">Reservations</a>
+                <a href="trackorder.html" class="block py-2 text-gray-700 hover:text-amber-600">Track Order</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-12">
-        <div class="max-w-4xl mx-auto">
-            <!-- Time Slot Selection -->
-            <div id="timeSelection" class="mb-12">
-                <h2 class="text-3xl font-bold mb-8 text-center text-gray-900 dark:text-gray-100">Select Time Slot</h2>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <button class="time-slot bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-all text-left" onclick="selectTime('18:00')">
-                        <h3 class="font-semibold text-lg">6:00 PM</h3>
-                        <p class="text-gray-600">Dinner</p>
-                    </button>
-                    <button class="time-slot bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-all text-left" onclick="selectTime('18:30')">
-                        <h3 class="font-semibold text-lg">6:30 PM</h3>
-                        <p class="text-gray-600">Dinner</p>
-                    </button>
-                    <button class="time-slot bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-all text-left" onclick="selectTime('19:00')">
-                        <h3 class="font-semibold text-lg">7:00 PM</h3>
-                        <p class="text-gray-600">Dinner</p>
-                    </button>
-                    <button class="time-slot bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-all text-left" onclick="selectTime('19:30')">
-                        <h3 class="font-semibold text-lg">7:30 PM</h3>
-                        <p class="text-gray-600">Dinner</p>
-                    </button>
-                    <button class="time-slot bg-white p-4 rounded-xl shadow-md hover:shadow-lg transition-all text-left" onclick="selectTime('20:00')">
-                        <h3 class="font-semibold text-lg">8:00 PM</h3>
-                        <p class="text-gray-600">Dinner</p>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Table Selection -->
-            <div id="tableSelection" class="hidden mb-12">
-                <div class="flex items-center justify-between mb-8">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Available Tables</h2>
-                    <button onclick="goBackToTime()" class="text-amber-600 hover:text-amber-700 flex items-center">
-                        <i class="fas fa-arrow-left mr-2"></i>
-                        Change Time
-                    </button>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div class="table-card bg-white p-6 rounded-xl shadow-md relative" onclick="selectTable(1)">
-                        <div class="absolute top-4 right-4 text-amber-600">
-                            <i class="fas fa-chair"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Table 1</h3>
-                        <p class="text-gray-600 mb-2">Seats: 4 people</p>
-                        <span class="text-green-600 font-semibold">Available</span>
-                    </div>
-                    <div class="table-card bg-white p-6 rounded-xl shadow-md relative" onclick="selectTable(2)">
-                        <div class="absolute top-4 right-4 text-amber-600">
-                            <i class="fas fa-chair"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Table 2</h3>
-                        <p class="text-gray-600 mb-2">Seats: 2 people</p>
-                        <span class="text-green-600 font-semibold">Available</span>
-                    </div>
-                    <div class="table-card bg-white p-6 rounded-xl shadow-md relative" onclick="selectTable(3)">
-                        <div class="absolute top-4 right-4 text-amber-600">
-                            <i class="fas fa-chair"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">Table 3</h3>
-                        <p class="text-gray-600 mb-2">Seats: 6 people</p>
-                        <span class="text-red-600 font-semibold">Booked</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Confirmation Modal -->
-            <div id="confirmationModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-8 max-w-md w-full">
-                    <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Confirm Reservation</h3>
-                    <div class="mb-6">
-                        <p class="text-gray-600 dark:text-gray-300"><span class="font-semibold">Time:</span> <span id="confirmTime"></span></p>
-                        <p class="text-gray-600 dark:text-gray-300"><span class="font-semibold">Table:</span> <span id="confirmTable"></span></p>
-                    </div>
-                    <div class="flex space-x-4">
-                        <button onclick="cancelConfirmation()" class="flex-1 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-300 px-6 py-3 rounded-lg transition-colors">
-                            Cancel
-                        </button>
-                        <button onclick="confirmReservation()" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg transition-colors">
-                            Confirm
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Success Message -->
-            <div id="successMessage" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-8 max-w-md w-full text-center">
-                    <div class="text-6xl text-green-500 mb-4">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Reservation Confirmed!</h3>
-                    <p class="text-gray-600 dark:text-gray-300 mb-6">Your table has been successfully booked</p>
-                    <button onclick="closeSuccess()" class="bg-amber-600 hover:bg-amber-700 text-white px-8 py-3 rounded-lg transition-colors">
-                        Done
-                    </button>
-                </div>
+    <main class="container mx-auto p-4">
+        <!-- Date Selection -->
+        <div class="max-w-4xl mx-auto mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-center">Select Reservation Date</h2>
+            <input type="date" id="reservationDate" class="w-full p-4 rounded border mb-8" min="{{today}}">
+        </div>
+        <!-- Time Slot Selection -->
+        <div class="max-w-4xl mx-auto mb-8">
+            <h2 class="text-2xl font-bold mb-4 text-center">Select Time Slot</h2>
+            <div class="grid gap-4 md:grid-cols-3">
+                <button class="bg-white p-4 rounded shadow text-left hover:shadow-md" onclick="selectTime('18:00')">
+                    <h3 class="font-bold">6:00 PM</h3>
+                    <p class="text-gray-600">Dinner</p>
+                </button>
+                <button class="bg-white p-4 rounded shadow text-left hover:shadow-md" onclick="selectTime('19:00')">
+                    <h3 class="font-bold">7:00 PM</h3>
+                    <p class="text-gray-600">Dinner</p>
+                </button>
+                <button class="bg-white p-4 rounded shadow text-left hover:shadow-md" onclick="selectTime('20:00')">
+                    <h3 class="font-bold">8:00 PM</h3>
+                    <p class="text-gray-600">Dinner</p>
+                </button>
             </div>
         </div>
-    </div>
+
+        <!-- Table Selection -->
+        <div id="tableSelection" class="max-w-4xl mx-auto hidden">
+            <h2 class="text-2xl font-bold mb-4">Available Tables</h2>
+            <div class="grid gap-4 md:grid-cols-3">
+                <button class="bg-white p-4 rounded shadow text-left hover:shadow-md" onclick="selectTable(1)">
+                    <h3 class="font-bold">Table 1</h3>
+                    <p class="text-gray-600">4 Seats</p>
+                    <span class="text-green-600">Available</span>
+                </button>
+                <button class="bg-white p-4 rounded shadow text-left hover:shadow-md" onclick="selectTable(2)">
+                    <h3 class="font-bold">Table 2</h3>
+                    <p class="text-gray-600">2 Seats</p>
+                    <span class="text-green-600">Available</span>
+                </button>
+                <button class="bg-white p-4 rounded shadow text-left hover:shadow-md" disabled>
+                    <h3 class="font-bold">Table 3</h3>
+                    <p class="text-gray-600">6 Seats</p>
+                    <span class="text-red-600">Booked</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-16 mt-20">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+                <div>
+                    <h4 class="text-2xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-utensils text-amber-500 mr-3"></i>
+                        TableTop
+                    </h4>
+                    <p class="text-gray-400 mb-6">Experience fine dining at its best with our award-winning cuisine and exceptional service.</p>
+                    <div class="flex space-x-5">
+                        <a href="https://github.com/PavanMeka09/TableTop" target="_blank" class="text-gray-400 hover:text-amber-500 transition-colors">
+                            <i class="fa-brands fa-github text-3xl"></i>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="menu.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Our Menu</a></li>
+                        <li><a href="reservations.html" class="text-amber-500 flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Reservations</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-12 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2025 TableTop. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        // Session check and UI update
+        async function checkSessionAndUpdateUI() {
+            const nav = document.querySelector('nav .flex.items-center.space-x-4');
+            let loginBtn = nav.querySelector('a.login-btn');
+            let logoutBtn = nav.querySelector('.logout-btn');
+            if (logoutBtn) logoutBtn.remove();
+            try {
+                const res = await fetch('../backend/auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ action: 'check_session' })
+                });
+                const data = await res.json();
+                if (data.logged_in) {
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    const logout = document.createElement('a');
+                    logout.textContent = 'Logout';
+                    logout.href = '#';
+                    logout.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md logout-btn';
+                    logout.onclick = async function(e) {
+                        e.preventDefault();
+                        await fetch('../backend/auth.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: new URLSearchParams({ action: 'logout' })
+                        });
+                        window.location.href = '../index.html';
+                    };
+                    nav.appendChild(logout);
+                } else {
+                    if (loginBtn) loginBtn.style.display = '';
+                }
+            } catch (e) {
+                if (loginBtn) loginBtn.style.display = '';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', checkSessionAndUpdateUI);
+        // Toast feedback
+        function showToast(msg, type = 'info') {
+            let toast = document.createElement('div');
+            toast.className = `fixed bottom-8 right-8 z-50 px-6 py-3 rounded shadow-lg text-white font-semibold ${type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-amber-600'}`;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
         let selectedTime = null;
         let selectedTable = null;
+        // Set today's date as min for date input
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('reservationDate').min = today;
+            document.getElementById('reservationDate').value = today;
+        });
 
         function selectTime(time) {
             selectedTime = time;
-            document.getElementById('timeSelection').classList.add('hidden');
             document.getElementById('tableSelection').classList.remove('hidden');
+            window.scrollTo({ top: document.getElementById('tableSelection').offsetTop, behavior: 'smooth' });
         }
 
-        function goBackToTime() {
-            selectedTime = null;
-            document.getElementById('tableSelection').classList.add('hidden');
-            document.getElementById('timeSelection').classList.remove('hidden');
-        }
-
-        function selectTable(tableNumber) {
-            const tableElement = event.currentTarget;
-            if (tableElement.querySelector('span').textContent === 'Available') {
-                selectedTable = tableNumber;
-                document.getElementById('confirmTime').textContent = selectedTime;
-                document.getElementById('confirmTable').textContent = `Table ${tableNumber}`;
-                document.getElementById('confirmationModal').classList.remove('hidden');
-            }
-        }
-
-        function cancelConfirmation() {
-            document.getElementById('confirmationModal').classList.add('hidden');
-        }
-
-        function confirmReservation() {
-            document.getElementById('confirmationModal').classList.add('hidden');
-            document.getElementById('successMessage').classList.remove('hidden');
-            document.getElementById('tableSelection').classList.add('hidden');
-        }
-
-        function closeSuccess() {
-            document.getElementById('successMessage').classList.add('hidden');
-            window.location.reload();
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const response = await fetch('../backend/reservation.php?action=get_reservations');
-                const data = await response.json();
-
-                if (data.error) {
-                    alert(data.error);
-                    return;
+        async function selectTable(tableNumber) {
+            selectedTable = tableNumber;
+            const date = document.getElementById('reservationDate').value;
+            if (!date) { showToast('Please select a reservation date.', 'error'); return; }
+            if (!selectedTime) { showToast('Please select a time slot.', 'error'); return; }
+            const reservation_time = date + ' ' + selectedTime + ':00';
+            const data = new URLSearchParams({
+                action: 'create_reservation',
+                table_number: selectedTable,
+                reservation_time
+            });
+            showToast('Booking table...', 'info');
+            fetch('../backend/reservation.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: data
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Reservation confirmed!', 'success');
+                    setTimeout(() => window.location.reload(), 1200);
+                } else {
+                    showToast(data.error || 'Failed to make reservation', 'error');
                 }
-
-                const tableSelection = document.getElementById('tableSelection');
-                tableSelection.innerHTML = '';
-
-                data.forEach(reservation => {
-                    const tableCard = document.createElement('div');
-                    tableCard.className = 'table-card bg-white p-6 rounded-xl shadow-md relative';
-                    tableCard.innerHTML = `
-                        <div class='absolute top-4 right-4 text-amber-600'>
-                            <i class='fas fa-chair'></i>
-                        </div>
-                        <h3 class='text-xl font-bold mb-2'>Table ${reservation.table_number}</h3>
-                        <p class='text-gray-600 mb-2'>Seats: ${reservation.seats} people</p>
-                        <span class='${reservation.status === 'available' ? 'text-green-600' : 'text-red-600'} font-semibold'>${reservation.status}</span>
-                    `;
-                    tableSelection.appendChild(tableCard);
-                });
-            } catch (error) {
-                console.error('Error fetching reservations:', error);
-            }
-        });
+            })
+            .catch(error => {
+                showToast('Failed to make reservation', 'error');
+            });
+        }
     </script>
 </body>
 </html>

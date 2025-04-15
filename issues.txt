@@ -1,0 +1,20 @@
+frontend issues:
+- fix 2 logout buttons in pages
+
+
+backend issue:
+- invalid action in crud menu
+- invalid request after opening reservations.html
+- email otp verification issue
+- checkout page functionality, inlcude razor pay php sdk
+
+End fixes:
+- fix footer in index.html use flex box and improve
+- use correct icons
+- fix navbars in all pages
+- check for mobile
+- add alerts and popups
+- set favicon
+- fix titles
+- fix hover events in all pages
+- make simple logic for login/logout button

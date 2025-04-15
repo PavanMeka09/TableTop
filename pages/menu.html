@@ -3,137 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TableTop | Menu</title>
+    <title>Menu | TableTop Restaurant</title>
+    <link rel="icon" type="image/png" href="../assets/images/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
-    <script>
-        // Dark mode toggle
-        const toggleDarkMode = () => {
-            document.documentElement.classList.toggle('dark');
-        };
-    </script>
-
-    <nav class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+    <!-- Back Button -->
+    <a href="../index.html" class="fixed top-6 left-6 text-amber-600 hover:text-amber-700 transition-colors z-50">
+        <i class="fas fa-arrow-left text-2xl"></i>
+    </a>
+    <nav class="bg-white shadow-md sticky top-0 z-40 mb-8">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-2">
+                <a href="../index.html" class="flex items-center space-x-2">
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
-                    <a href="../index.html"><h1 class="text-2xl font-bold text-amber-600">TableTop</h1></a>
-                </div>
-                <div class="hidden md:flex items-center space-x-8">
-                    <a href="menu.html" class="text-gray-700 dark:text-gray-300 hover:text-amber-600 transition-colors">Track Order</a>
-                    <a href="reservations.html" class="text-gray-700 dark:text-gray-300 hover:text-amber-600 transition-colors">Table reservation status</a>
-                </div>
+                    <h1 class="text-2xl font-bold text-amber-600">TableTop</h1>
+                </a>
                 <div class="flex items-center space-x-4">
-                    <a href="login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md">
-                        Login / Signup
-                    </a>
-                    <button id="mobile-menu-button" class="md:hidden text-gray-700">
-                        <i class="fas fa-bars text-2xl"></i>
-                    </button>
+                    <a href="login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md login-btn">Login</a>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-700"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100">
+                <a href="menu.html" class="block py-2 text-amber-600 font-semibold border-b-2 border-amber-600">Menu</a>
+                <a href="reservations.html" class="block py-2 text-gray-700 hover:text-amber-600">Reservations</a>
+                <a href="trackorder.html" class="block py-2 text-gray-700 hover:text-amber-600">Track Order</a>
             </div>
         </div>
     </nav>
-
-    <div class="container mx-auto px-4 py-12">
-        <div class="max-w-3xl mx-auto mb-12 relative">
-            <input type="text" id="searchInput" placeholder="Search dishes..." class="w-full px-6 py-4 rounded-xl border-2 border-gray-200 focus:outline-none focus:border-amber-500 transition-colors">
-            <i class="fas fa-search absolute right-6 top-5 text-gray-400"></i>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="menuItems">
-        </div>
-
-        <div class="fixed bottom-8 right-8 bg-white dark:bg-gray-800 rounded-xl shadow-xl p-6 w-80 transition-transform" id="basket">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Basket (<span id="basketCount">0</span>)</h3>
-                <button id="clearBasket" class="text-red-500 hover:text-red-600" onclick="clearCart()">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-            <div id="basketItems" class="mb-4 max-h-64 overflow-y-auto"></div>
-            <button id="continueBtn" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold disabled:bg-gray-400 disabled:cursor-not-allowed" disabled>
-                Continue to Checkout
+    <main class="container mx-auto p-4">
+        <input type="text" id="searchInput" placeholder="Search dishes..." class="w-full p-4 rounded-lg border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:outline-none mb-8 shadow-sm text-lg">
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" id="menuItems"></div>
+        <div class="fixed bottom-4 right-4 bg-white p-4 rounded-xl shadow-lg w-80 max-w-full border border-gray-100" id="basket">
+            <h3 class="text-lg mb-2 font-semibold flex items-center"><i class="fas fa-shopping-basket text-amber-600 mr-2"></i>Basket (<span id="basketCount">0</span>)</h3>
+            <div id="basketItems" class="max-h-48 overflow-y-auto mb-4"></div>
+            <button id="checkoutBtn" class="w-full bg-amber-600 text-white p-2 rounded-lg font-medium disabled:bg-gray-400 transition-colors" disabled>
+                Checkout
             </button>
         </div>
-    </div>
-
+    </main>
     <script>
-        let cart = [];
-        
-        function addToCart(id, name, price) {
-            cart.push({ id, name, price });
-            updateBasket();
-        }
-
-        function clearCart() {
-            cart = [];
-            updateBasket();
-        }
-
-        function updateBasket() {
-            document.getElementById('basketCount').textContent = cart.length;
-            document.getElementById('continueBtn').disabled = cart.length === 0;
-            updateBasketItems();
-        }
-
-        function updateBasketItems() {
-            const basketItems = document.getElementById('basketItems');
-            basketItems.innerHTML = cart.map((item, index) => `
-                <div class="flex justify-between items-center py-2 border-b">
-                    <span>${item.name}</span>
-                    <span class="text-amber-600 font-semibold">₹${item.price}</span>
-                </div>
-            `).join('');
-        }
-
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const searchTerm = e.target.value.toLowerCase();
-            document.querySelectorAll('.menu-item').forEach(item => {
-                const text = item.textContent.toLowerCase();
-                item.style.display = text.includes(searchTerm) ? 'block' : 'none';
-            });
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
         });
-
-        document.addEventListener('DOMContentLoaded', async () => {
+        // Session check and UI update
+        async function checkSessionAndUpdateUI() {
+            const nav = document.querySelector('nav .flex.items-center.space-x-4');
+            let loginBtn = nav.querySelector('a.login-btn');
+            let logoutBtn = nav.querySelector('.logout-btn');
+            if (logoutBtn) logoutBtn.remove();
             try {
-                const response = await fetch('../backend/menu.php');
-                const data = await response.json();
-
-                if (data.status === 'success') {
-                    const menuItemsContainer = document.getElementById('menuItems');
-                    menuItemsContainer.innerHTML = '';
-
-                    data.data.forEach(item => {
-                        const menuItem = document.createElement('div');
-                        menuItem.className = 'bg-white rounded-xl shadow-md overflow-hidden menu-item';
-                        menuItem.innerHTML = `
-                            <div class='h-48 bg-cover bg-center' style='background-image: url(${item.image_url || 'https://via.placeholder.com/150'})'></div>
-                            <div class='p-6'>
-                                <div class='flex justify-between items-start mb-4'>
-                                    <div>
-                                        <h3 class='text-xl font-bold mb-2'>${item.name}</h3>
-                                        <p class='text-amber-600 font-semibold text-lg'>₹${item.price}</p>
-                                    </div>
-                                    <button class='add-to-cart text-amber-600 hover:text-amber-700' onclick='addToCart(${item.id}, "${item.name}", ${item.price})'>
-                                        <i class='fas fa-plus-circle text-3xl'></i>
-                                    </button>
-                                </div>
-                                <p class='text-gray-600 mb-4'>${item.description}</p>
-                            </div>
-                        `;
-                        menuItemsContainer.appendChild(menuItem);
-                    });
+                const res = await fetch('../backend/auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ action: 'check_session' })
+                });
+                const data = await res.json();
+                if (data.logged_in) {
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    const logout = document.createElement('a');
+                    logout.textContent = 'Logout';
+                    logout.href = '#';
+                    logout.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md logout-btn';
+                    logout.onclick = async function(e) {
+                        e.preventDefault();
+                        await fetch('../backend/auth.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: new URLSearchParams({ action: 'logout' })
+                        });
+                        window.location.href = '../index.html';
+                    };
+                    nav.appendChild(logout);
                 } else {
-                    alert('Failed to load menu items.');
+                    if (loginBtn) loginBtn.style.display = '';
                 }
-            } catch (error) {
-                console.error('Error fetching menu items:', error);
+            } catch (e) {
+                if (loginBtn) loginBtn.style.display = '';
             }
-        });
+        }
+        document.addEventListener('DOMContentLoaded', checkSessionAndUpdateUI);
     </script>
+    <script src="../assets/js/menu.js"></script>
 </body>
 </html>

@@ -9,6 +9,10 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     exit;
 }
 
+function log_error($msg) {
+    error_log($msg, 3, __DIR__ . '/../error.log');
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
@@ -26,6 +30,7 @@ if ($method === 'GET') {
 
         echo json_encode($orders);
     } catch (PDOException $e) {
+        log_error($e->getMessage());
         echo json_encode(['error' => 'Failed to get orders.']);
     }
 } else {

@@ -3,119 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Admin</title>
+    <title>Admin Dashboard | TableTop Restaurant</title>
+    <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
-    <script>
-
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const response = await fetch('../../backend/admin.php?action=get_quick_stats');
-            const data = await response.json();
-
-            if (data.error) {
-                alert(data.error);
-                return;
-            }
-
-            document.querySelector('.quick-stats .pending-orders').textContent = data.pending_orders;
-            document.querySelector('.quick-stats .new-feedback').textContent = data.new_feedback;
-            document.querySelector('.quick-stats .menu-items').textContent = data.menu_items;
-        } catch (error) {
-            console.error('Error fetching quick stats:', error);
-        }
-    });
-    </script>
-
-    <nav class="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
+<body class="bg-gray-50">
+    <nav class="bg-white shadow-md sticky top-0 z-50">
         <div class="container mx-auto px-4">
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
-                    <a href="dashboard.html" class="text-2xl font-bold text-amber-600">TableTop Admin</a>
+                    <h1 class="text-2xl font-bold text-amber-600">TableTop Admin</h1>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="../index.html" class="text-amber-600 hover:text-amber-700">
-                        <i class="fas fa-sign-out-alt text-xl"></i>
-                    </a>
+                    <a href="dashboard.html" class="text-amber-600 font-semibold border-b-2 border-amber-600">Dashboard</a>
+                    <a href="menu.html" class="text-gray-700 hover:text-amber-600 transition-colors">Menu</a>
+                    <a href="orders.html" class="text-gray-700 hover:text-amber-600 transition-colors">Orders</a>
+                    <a href="feedback.html" class="text-gray-700 hover:text-amber-600 transition-colors">Feedback</a>
+                    <a href="reservations.html" class="text-gray-700 hover:text-amber-600 transition-colors">Reservations</a>
+                    <a href="../../pages/login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md login-btn">Login</a>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-700"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
+            </div>
+            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100">
+                <a href="dashboard.html" class="block py-2 text-amber-600 font-semibold border-b-2 border-amber-600">Dashboard</a>
+                <a href="menu.html" class="block py-2 text-gray-700 hover:text-amber-600">Menu</a>
+                <a href="orders.html" class="block py-2 text-gray-700 hover:text-amber-600">Orders</a>
+                <a href="feedback.html" class="block py-2 text-gray-700 hover:text-amber-600">Feedback</a>
+                <a href="reservations.html" class="block py-2 text-gray-700 hover:text-amber-600">Reservations</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mx-auto px-4 py-12">
-        <div class="max-w-6xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                <!-- Manage Menu Card -->
-                <a href="menu.html" class="admin-card bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
-                    <div class="text-center">
-                        <div class="bg-amber-100 dark:bg-amber-900 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
-                            <i class="fas fa-utensils text-3xl text-amber-600"></i>
-                        </div>
-                        <h3 class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Manage Menu</h3>
-                        <p class="text-gray-600 dark:text-gray-300">Add, edit or remove items from the menu</p>
-                    </div>
-                </a>
+    <main class="container mx-auto p-6">
+        <div class="grid gap-6 md:grid-cols-3 mb-8">
+            <a href="menu.html" 
+               class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1">
+                <div class="bg-amber-50 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-utensils text-2xl text-amber-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900">Manage Menu</h3>
+                <p class="text-gray-600 mt-2">Add, edit, or remove menu items</p>
+            </a>
 
-                <!-- Track Orders Card -->
-                <a href="orders.html" class="admin-card bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
-                    <div class="text-center">
-                        <div class="bg-amber-100 dark:bg-amber-900 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
-                            <i class="fas fa-clipboard-list text-3xl text-amber-600"></i>
-                        </div>
-                        <h3 class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Track Orders</h3>
-                        <p class="text-gray-600 dark:text-gray-300">View and manage customer orders</p>
-                    </div>
-                </a>
+            <a href="orders.html" 
+               class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1">
+                <div class="bg-amber-50 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-clipboard-list text-2xl text-amber-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900">Track Orders</h3>
+                <p class="text-gray-600 mt-2">Monitor and manage customer orders</p>
+            </a>
 
-                <!-- Customer Feedback Card -->
-                <a href="feedback.html" class="admin-card bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
-                    <div class="text-center">
-                        <div class="bg-amber-100 dark:bg-amber-900 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
-                            <i class="fas fa-comment-alt text-3xl text-amber-600"></i>
-                        </div>
-                        <h3 class="text-2xl font-semibold mb-2 text-gray-900 dark:text-gray-100">Customer Feedback</h3>
-                        <p class="text-gray-600 dark:text-gray-300">Read and respond to customer reviews</p>
-                    </div>
-                </a>
-            </div>
+            <a href="feedback.html" 
+               class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1">
+                <div class="bg-amber-50 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-comment-alt text-2xl text-amber-600"></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900">Customer Feedback</h3>
+                <p class="text-gray-600 mt-2">View and respond to customer feedback</p>
+            </a>
+        </div>
 
-            <!-- Quick Stats -->
-            <div class="quick-stats bg-white dark:bg-gray-800 rounded-xl shadow-md p-8">
-                <h3 class="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Quick Overview</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-amber-50 dark:bg-amber-900 p-6 rounded-xl">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-600 dark:text-gray-300">Pending Orders</p>
-                                <p class="pending-orders text-3xl font-bold text-gray-900 dark:text-gray-100">12</p>
-                            </div>
-                            <i class="fas fa-clock text-3xl text-amber-600"></i>
-                        </div>
+        <div class="bg-white rounded-lg shadow-sm p-6">
+            <h3 class="text-xl font-bold mb-6">Quick Overview</h3>
+            <div class="grid gap-6 md:grid-cols-3">
+                <div class="bg-amber-50 p-6 rounded-lg">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-gray-600">Pending Orders</p>
+                        <i class="fas fa-clock text-amber-600"></i>
                     </div>
-                    <div class="bg-amber-50 dark:bg-amber-900 p-6 rounded-xl">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-600 dark:text-gray-300">New Feedback</p>
-                                <p class="new-feedback text-3xl font-bold text-gray-900 dark:text-gray-100">5</p>
-                            </div>
-                            <i class="fas fa-comment-dots text-3xl text-amber-600"></i>
-                        </div>
+                    <p class="pending-orders text-3xl font-bold text-gray-900">-</p>
+                </div>
+                
+                <div class="bg-amber-50 p-6 rounded-lg">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-gray-600">New Feedback</p>
+                        <i class="fas fa-comment text-amber-600"></i>
                     </div>
-                    <div class="bg-amber-50 dark:bg-amber-900 p-6 rounded-xl">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="text-gray-600 dark:text-gray-300">Menu Items</p>
-                                <p class="menu-items text-3xl font-bold text-gray-900 dark:text-gray-100">42</p>
-                            </div>
-                            <i class="fas fa-pizza-slice text-3xl text-amber-600"></i>
-                        </div>
+                    <p class="new-feedback text-3xl font-bold text-gray-900">-</p>
+                </div>
+                
+                <div class="bg-amber-50 p-6 rounded-lg">
+                    <div class="flex items-center justify-between mb-2">
+                        <p class="text-gray-600">Menu Items</p>
+                        <i class="fas fa-utensils text-amber-600"></i>
                     </div>
+                    <p class="menu-items text-3xl font-bold text-gray-900">-</p>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-16 mt-20">
+        <div class="border-t border-gray-700 mt-12 pt-8 text-center">
+            <p class="text-gray-400">&copy; 2025 TableTop. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        // Session check and UI update
+        async function checkSessionAndUpdateUI() {
+            const nav = document.querySelector('nav .flex.items-center.space-x-4');
+            let loginBtn = nav.querySelector('a.login-btn');
+            let logoutBtn = nav.querySelector('.logout-btn');
+            if (logoutBtn) logoutBtn.remove();
+            try {
+                const res = await fetch('../../backend/auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ action: 'check_session' })
+                });
+                const data = await res.json();
+                if (data.logged_in && data.role === 'admin') {
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    const logout = document.createElement('a');
+                    logout.textContent = 'Logout';
+                    logout.href = '#';
+                    logout.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md logout-btn';
+                    logout.onclick = async function(e) {
+                        e.preventDefault();
+                        await fetch('../../backend/auth.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: new URLSearchParams({ action: 'logout' })
+                        });
+                        window.location.href = '../../index.html';
+                    };
+                    nav.appendChild(logout);
+                } else {
+                    if (loginBtn) loginBtn.style.display = '';
+                    window.location.href = '../../pages/login.html';
+                }
+            } catch (e) {
+                if (loginBtn) loginBtn.style.display = '';
+                window.location.href = '../../pages/login.html';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', checkSessionAndUpdateUI);
+        // Toast feedback
+        function showToast(msg, type = 'info') {
+            let toast = document.createElement('div');
+            toast.className = `fixed bottom-8 right-8 z-50 px-6 py-3 rounded shadow-lg text-white font-semibold ${type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-amber-600'}`;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+        // Quick stats and chart
+        async function loadStatsAndChart() {
+            const pending = document.querySelector('.pending-orders');
+            const feedback = document.querySelector('.new-feedback');
+            const menu = document.querySelector('.menu-items');
+            pending.textContent = feedback.textContent = menu.textContent = '...';
+            try {
+                const res = await fetch('../../backend/admin.php?action=get_quick_stats');
+                const data = await res.json();
+                if (!data.error && data.data) {
+                    pending.textContent = data.data.pending_orders;
+                    feedback.textContent = data.data.new_feedback;
+                    menu.textContent = data.data.menu_items;
+                    // Removed chart/graph rendering
+                } else {
+                    showToast('Failed to load stats', 'error');
+                }
+            } catch (e) {
+                showToast('Failed to load stats', 'error');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', loadStatsAndChart);
+    </script>
 </body>
 </html>

@@ -4,10 +4,25 @@ require_once 'config.php';
 
 header('Content-Type: application/json');
 
+// function validate_csrf_token($token) {
+//     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+// }
+
+function log_error($msg) {
+    error_log($msg, 3, __DIR__ . '/../error.log');
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'POST') {
     $action = $_POST['action'] ?? '';
+    // $csrf_token = $_POST['csrf_token'] ?? '';
+
+    // if (!validate_csrf_token($csrf_token)) {
+    //     echo json_encode(['error' => 'Invalid CSRF token.']);
+    //     http_response_code(403);
+    //     exit;
+    // }
 
     if ($action === 'place_order') {
         if (!isset($_SESSION['user_id'])) {
@@ -16,15 +31,17 @@ if ($method === 'POST') {
         }
 
         $user_id = $_SESSION['user_id'];
-        $items = $_POST['items'] ?? []; // Array of menu_id and quantity
+        $items = json_decode($_POST['items'] ?? '[]', true);
         $total_price = 0;
 
-        if (empty($items)) {
+        if (!is_array($items) || empty($items)) {
             echo json_encode(['error' => 'No items selected.']);
             exit;
         }
 
         try {
+            $pdo->beginTransaction();
+
             // Calculate total price
             foreach ($items as $item) {
                 $menu_id = $item['menu_id'];
@@ -56,8 +73,11 @@ if ($method === 'POST') {
                 $stmt->execute([$order_id, $menu_id, $quantity]);
             }
 
+            $pdo->commit();
             echo json_encode(['success' => 'Order placed successfully.', 'order_id' => $order_id]);
         } catch (PDOException $e) {
+            $pdo->rollBack();
+            log_error($e->getMessage());
             echo json_encode(['error' => 'Failed to place order.']);
         }
     } elseif ($action === 'update_status') {

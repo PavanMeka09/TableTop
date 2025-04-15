@@ -4,6 +4,10 @@ require_once 'config.php';
 
 header('Content-Type: application/json');
 
+function log_error($msg) {
+    error_log($msg, 3, __DIR__ . '/../error.log');
+}
+
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     echo json_encode(['error' => 'Unauthorized access.']);
     exit;
@@ -18,25 +22,28 @@ if ($method === 'GET') {
         try {
             $stmt = $pdo->query("SELECT * FROM orders");
             $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode($orders);
+            echo json_encode(['success' => true, 'data' => $orders]);
         } catch (PDOException $e) {
-            echo json_encode(['error' => 'Failed to get orders.']);
+            log_error('Failed to get orders: ' . $e->getMessage());
+            echo json_encode(['success' => false, 'error' => 'Failed to get orders.']);
         }
     } elseif ($action === 'get_all_reservations') {
         try {
             $stmt = $pdo->query("SELECT * FROM reservations");
             $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode($reservations);
+            echo json_encode(['success' => true, 'data' => $reservations]);
         } catch (PDOException $e) {
-            echo json_encode(['error' => 'Failed to get reservations.']);
+            log_error('Failed to get reservations: ' . $e->getMessage());
+            echo json_encode(['success' => false, 'error' => 'Failed to get reservations.']);
         }
     } elseif ($action === 'get_all_feedback') {
         try {
             $stmt = $pdo->query("SELECT * FROM feedback");
             $feedback = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode($feedback);
+            echo json_encode(['success' => true, 'data' => $feedback]);
         } catch (PDOException $e) {
-            echo json_encode(['error' => 'Failed to get feedback.']);
+            log_error('Failed to get feedback: ' . $e->getMessage());
+            echo json_encode(['success' => false, 'error' => 'Failed to get feedback.']);
         }
     } elseif ($action === 'get_quick_stats') {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
@@ -55,17 +62,21 @@ if ($method === 'GET') {
             $menuItems = $stmt->fetch(PDO::FETCH_ASSOC)['menu_items'];
 
             echo json_encode([
-                'pending_orders' => $pendingOrders,
-                'new_feedback' => $newFeedback,
-                'menu_items' => $menuItems
+                'success' => true,
+                'data' => [
+                    'pending_orders' => $pendingOrders,
+                    'new_feedback' => $newFeedback,
+                    'menu_items' => $menuItems
+                ]
             ]);
         } catch (PDOException $e) {
-            echo json_encode(['error' => 'Failed to fetch quick stats.']);
+            log_error('Failed to fetch quick stats: ' . $e->getMessage());
+            echo json_encode(['success' => false, 'error' => 'Failed to fetch quick stats.']);
         }
     } else {
-        echo json_encode(['error' => 'Invalid action.']);
+        echo json_encode(['success' => false, 'error' => 'Invalid action.']);
     }
 } else {
-    echo json_encode(['error' => 'Invalid request method.']);
+    echo json_encode(['success' => false, 'error' => 'Invalid request method.']);
 }
 ?>

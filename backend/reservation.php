@@ -4,10 +4,25 @@ require_once 'config.php';
 
 header('Content-Type: application/json');
 
+// function validate_csrf_token($token) {
+//     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+// }
+
+function log_error($msg) {
+    error_log($msg, 3, __DIR__ . '/../error.log');
+}
+
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'POST') {
     $action = $_POST['action'] ?? '';
+    // $csrf_token = $_POST['csrf_token'] ?? '';
+
+    // if (!validate_csrf_token($csrf_token)) {
+    //     echo json_encode(['error' => 'Invalid CSRF token.']);
+    //     http_response_code(403);
+    //     exit;
+    // }
 
     if ($action === 'create_reservation') {
         if (!isset($_SESSION['user_id'])) {
@@ -16,11 +31,19 @@ if ($method === 'POST') {
         }
 
         $user_id = $_SESSION['user_id'];
-        $table_number = $_POST['table_number'] ?? '';
+        $table_number = intval($_POST['table_number'] ?? 0);
         $reservation_time = $_POST['reservation_time'] ?? '';
 
-        if (empty($table_number) || empty($reservation_time)) {
+        if (!$table_number || empty($reservation_time)) {
             echo json_encode(['error' => 'Table number and reservation time are required.']);
+            exit;
+        }
+
+        // Real-time check for overlapping reservation
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE table_number = ? AND reservation_time = ? AND status != 'cancelled'");
+        $stmt->execute([$table_number, $reservation_time]);
+        if ($stmt->fetchColumn() > 0) {
+            echo json_encode(['error' => 'Table already booked for this time.']);
             exit;
         }
 
@@ -29,6 +52,7 @@ if ($method === 'POST') {
             $stmt->execute([$user_id, $table_number, $reservation_time]);
             echo json_encode(['success' => 'Reservation created successfully.']);
         } catch (PDOException $e) {
+            log_error($e->getMessage());
             echo json_encode(['error' => 'Failed to create reservation.']);
         }
     } elseif ($action === 'update_status') {
