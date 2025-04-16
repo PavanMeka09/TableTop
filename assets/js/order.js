@@ -2,11 +2,7 @@
 
 // User-friendly toast feedback
 function showToast(msg, type = 'info') {
-    let toast = document.createElement('div');
-    toast.className = `fixed bottom-8 right-8 z-50 px-6 py-3 rounded shadow-lg text-white font-semibold ${type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-amber-600'}`;
-    toast.textContent = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => { toast.remove(); }, 3000);
+    alert(msg);
 }
 
 // Place an order

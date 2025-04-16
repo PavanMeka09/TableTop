@@ -39,19 +39,6 @@
         <div class="max-w-6xl mx-auto">
             <div class="flex justify-between items-center mb-8">
                 <h2 class="text-2xl font-bold text-gray-900">Customer Feedback</h2>
-                <div class="flex gap-3">
-                    <select id="filterStatus" 
-                            class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
-                        <option value="all">All Feedback</option>
-                        <option value="new">New</option>
-                        <option value="reviewed">Reviewed</option>
-                    </select>
-                    <button onclick="exportFeedback()" 
-                            class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md flex items-center">
-                        <i class="fas fa-download mr-2"></i>
-                        Export CSV
-                    </button>
-                </div>
             </div>
 
             <div id="feedbackList" class="space-y-4"></div>
@@ -88,35 +75,9 @@
         </div>
     </div>
 
-    <footer class="bg-gray-800 text-white py-16 mt-20">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div>
-                    <h4 class="text-2xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-utensils text-amber-500 mr-3"></i>
-                        TableTop
-                    </h4>
-                    <p class="text-gray-400 mb-6">Admin dashboard for TableTop restaurant management.</p>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
-                    <ul class="space-y-3">
-                        <li><a href="dashboard.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Dashboard</a></li>
-                        <li><a href="menu.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Menu</a></li>
-                        <li><a href="orders.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Orders</a></li>
-                        <li><a href="feedback.html" class="text-amber-500 flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Feedback</a></li>
-                        <li><a href="reservations.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Reservations</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-12 pt-8 text-center">
-                <p class="text-gray-400">&copy; 2025 TableTop. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
-
     <script>
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
+        document.getElementById('mobile-menu-button').ad
+        dEventListener('click', function() {
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.toggle('hidden');
         });
@@ -163,11 +124,7 @@
 
         // Toast feedback
         function showToast(msg, type = 'info') {
-            let toast = document.createElement('div');
-            toast.className = `fixed bottom-8 right-8 z-50 px-6 py-3 rounded shadow-lg text-white font-semibold ${type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-amber-600'}`;
-            toast.textContent = msg;
-            document.body.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3000);
+            alert(msg);
         }
 
         let currentFilter = 'all';
@@ -215,10 +172,6 @@
                 showToast('Failed to send response', 'error');
             }
         };
-
-        async function exportFeedback() {
-            window.location.href = `../../backend/feedback.php?action=export&status=${currentFilter}`;
-        }
 
         function loadFeedback() {
             fetch(`../../backend/feedback.php?action=get_feedback&status=${currentFilter}`)

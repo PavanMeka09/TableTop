@@ -89,12 +89,44 @@ if ($method === 'POST') {
         }
 
         $user_id = $_SESSION['user_id'];
+        $role = $_SESSION['role'] ?? 'user';
+        $date = $_POST['date'] ?? null;
+        $status = $_POST['status'] ?? null;
 
         try {
-            $stmt = $pdo->prepare("SELECT * FROM reservations WHERE user_id = ?");
-            $stmt->execute([$user_id]);
-            $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+            if ($role === 'admin') {
+                // Admin: get all reservations, optionally filter by date and status
+                $query = "SELECT r.*, u.name as customer_name, u.email as customer_email FROM reservations r JOIN users u ON r.user_id = u.id WHERE 1=1";
+                $params = [];
+                if ($date && strtolower($date) !== 'all') {
+                    $query .= " AND DATE(r.reservation_time) = ?";
+                    $params[] = $date;
+                }
+                if ($status && $status !== 'all') {
+                    $query .= " AND r.status = ?";
+                    $params[] = $status;
+                }
+                $query .= " ORDER BY r.reservation_time DESC";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute($params);
+                $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } else {
+                // Regular user: only their reservations
+                $query = "SELECT * FROM reservations WHERE user_id = ?";
+                $params = [$user_id];
+                if ($date && strtolower($date) !== 'all') {
+                    $query .= " AND DATE(reservation_time) = ?";
+                    $params[] = $date;
+                }
+                if ($status && $status !== 'all') {
+                    $query .= " AND status = ?";
+                    $params[] = $status;
+                }
+                $query .= " ORDER BY reservation_time DESC";
+                $stmt = $pdo->prepare($query);
+                $stmt->execute($params);
+                $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
             echo json_encode($reservations);
         } catch (PDOException $e) {
             echo json_encode(['error' => 'Failed to get reservations.']);

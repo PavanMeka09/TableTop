@@ -24,10 +24,11 @@ function renderMenuItems(items) {
     const menuContainer = document.getElementById('menuItems');
     menuContainer.innerHTML = '';
     items.forEach(item => {
+        const imgUrl = item.image_url ? (item.image_url.startsWith('/') ? item.image_url : item.image_url.replace('..','')) : 'https://via.placeholder.com/150';
         const menuItem = document.createElement('div');
-        menuItem.className = 'bg-white rounded-xl shadow-md overflow-hidden menu-item transition-transform duration-200 hover:shadow-xl hover:-translate-y-1';
+        menuItem.className = 'bg-white rounded-xl shadow-md overflow-hidden menu-item transition-transform duration-200 hover:shadow-xl hover:-translate-y-1 border border-gray-100';
         menuItem.innerHTML = `
-            <div class="h-48 bg-cover bg-center transition-transform duration-200 hover:scale-105" style="background-image: url('${item.image_url || 'https://via.placeholder.com/150'}')"></div>
+            <div class="h-48 bg-cover bg-center transition-transform duration-200 hover:scale-105" style="background-image: url('${imgUrl}')"></div>
             <div class="p-6">
                 <div class="flex justify-between items-start mb-4">
                     <div>
@@ -112,31 +113,87 @@ if (searchInput) {
     });
 }
 
+// Razorpay integration
+function loadRazorpayScript() {
+    return new Promise((resolve) => {
+        if (document.getElementById('razorpay-script')) return resolve();
+        const script = document.createElement('script');
+        script.id = 'razorpay-script';
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.onload = resolve;
+        document.body.appendChild(script);
+    });
+}
+
 // Checkout button logic
 const checkoutBtn = document.getElementById('checkoutBtn');
 if (checkoutBtn) {
     checkoutBtn.addEventListener('click', async function() {
         if (cart.length === 0) return;
         checkoutBtn.disabled = true;
-        checkoutBtn.textContent = 'Placing order...';
+        checkoutBtn.textContent = 'Processing...';
+        await loadRazorpayScript();
         const items = cart.map(item => ({ menu_id: item.id, quantity: item.quantity }));
         try {
-            const response = await fetch('../backend/order.php', {
+            // 1. Create Razorpay order on backend
+            const orderRes = await fetch('../backend/payment.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ action: 'place_order', items: JSON.stringify(items) })
+                body: new URLSearchParams({ action: 'create_razorpay_order', items: JSON.stringify(items) })
             });
-            const data = await response.json();
-            if (data.error) {
-                showToast(data.error, 'error');
-            } else {
-                showToast('Order placed successfully!', 'success');
-                cart = [];
-                saveCart();
-                updateCartUI();
+            const orderData = await orderRes.json();
+            if (orderData.error || !orderData.razorpay_order_id) {
+                showToast(orderData.error || 'Failed to initiate payment.', 'error');
+                checkoutBtn.disabled = false;
+                checkoutBtn.textContent = 'Checkout';
+                return;
             }
+            // 2. Open Razorpay Checkout
+            const options = {
+                key: orderData.razorpay_key_id, // Test key
+                amount: orderData.amount,
+                currency: 'INR',
+                name: 'TableTop',
+                description: 'Order Payment',
+                order_id: orderData.razorpay_order_id,
+                handler: async function (response) {
+                    // 3. On payment success, notify backend to place order and record payment
+                    try {
+                        const payRes = await fetch('../backend/payment.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                            body: new URLSearchParams({
+                                action: 'verify_razorpay_payment',
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_signature: response.razorpay_signature,
+                                items: JSON.stringify(items)
+                            })
+                        });
+                        const payData = await payRes.json();
+                        if (payData.success) {
+                            showToast('Payment successful! Order placed.', 'success');
+                            cart = [];
+                            saveCart();
+                            updateCartUI();
+                        } else {
+                            let msg = payData.error || 'Payment verification failed.';
+                            if (msg.includes('Failed to place order after payment')) {
+                                msg += '\nIf this keeps happening, please contact support.';
+                            }
+                            showToast(msg, 'error');
+                        }
+                    } catch (err) {
+                        showToast('Payment verification error.', 'error');
+                    }
+                },
+                prefill: {},
+                theme: { color: '#ffb300' }
+            };
+            const rzp = new window.Razorpay(options);
+            rzp.open();
         } catch (error) {
-            showToast('Failed to place order.', 'error');
+            showToast('Failed to initiate payment.', 'error');
         }
         checkoutBtn.disabled = false;
         checkoutBtn.textContent = 'Checkout';
@@ -154,11 +211,7 @@ function loadCart() {
 
 // User-friendly toast feedback
 function showToast(msg, type = 'info') {
-    let toast = document.createElement('div');
-    toast.className = `fixed bottom-8 right-8 z-50 px-6 py-3 rounded shadow-lg text-white font-semibold ${type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-amber-600'}`;
-    toast.textContent = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => { toast.remove(); }, 3000);
+    alert(msg);
 }
 
 // On load

@@ -95,14 +95,6 @@
             </div>
         </div>
     </main>
-
-    <footer class="bg-gray-800 text-white py-16 mt-20">
-        <div class="border-t border-gray-700 mt-12 pt-8 text-center">
-            <p class="text-gray-400">&copy; 2025 TableTop. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.getElementById('mobile-menu-button').addEventListener('click', function() {
             const mobileMenu = document.getElementById('mobile-menu');
@@ -149,11 +141,7 @@
         document.addEventListener('DOMContentLoaded', checkSessionAndUpdateUI);
         // Toast feedback
         function showToast(msg, type = 'info') {
-            let toast = document.createElement('div');
-            toast.className = `fixed bottom-8 right-8 z-50 px-6 py-3 rounded shadow-lg text-white font-semibold ${type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-amber-600'}`;
-            toast.textContent = msg;
-            document.body.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3000);
+            alert(msg);
         }
         // Quick stats and chart
         async function loadStatsAndChart() {

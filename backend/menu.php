@@ -18,6 +18,12 @@ if ($method === 'GET') {
     try {
         $stmt = $pdo->query("SELECT * FROM menu");
         $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Fix image_url for frontend (remove leading .. if present)
+        foreach ($menuItems as &$item) {
+            if (!empty($item['image_url'])) {
+                $item['image_url'] = preg_replace('/^\.\./', '', $item['image_url']);
+            }
+        }
         echo json_encode(['status' => 'success', 'data' => $menuItems]);
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => 'Failed to fetch menu items.']);
@@ -41,7 +47,6 @@ if ($method === 'GET') {
         $name = htmlspecialchars(trim($_POST['name'] ?? ''));
         $description = htmlspecialchars(trim($_POST['description'] ?? ''));
         $price = floatval($_POST['price'] ?? 0);
-        $category = htmlspecialchars(trim($_POST['category'] ?? ''));
         $image_url = $_POST['image_url'] ?? '';
 
         // Handle file upload if present
@@ -58,8 +63,8 @@ if ($method === 'GET') {
         }
 
         try {
-            $stmt = $pdo->prepare("INSERT INTO menu (name, description, price, category, image_url) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$name, $description, $price, $category, $image_url]);
+            $stmt = $pdo->prepare("INSERT INTO menu (name, description, price, image_url) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$name, $description, $price, $image_url]);
             echo json_encode(['status' => 'success', 'message' => 'Menu item added successfully.']);
         } catch (PDOException $e) {
             log_error($e->getMessage());
@@ -75,7 +80,6 @@ if ($method === 'GET') {
         $name = htmlspecialchars(trim($_POST['name'] ?? ''));
         $description = htmlspecialchars(trim($_POST['description'] ?? ''));
         $price = floatval($_POST['price'] ?? 0);
-        $category = htmlspecialchars(trim($_POST['category'] ?? ''));
         $image_url = $_POST['image_url'] ?? '';
 
         if (empty($id) || empty($name) || $price <= 0) {
@@ -84,8 +88,8 @@ if ($method === 'GET') {
         }
 
         try {
-            $stmt = $pdo->prepare("UPDATE menu SET name = ?, description = ?, price = ?, category = ?, image_url = ? WHERE id = ?");
-            $stmt->execute([$name, $description, $price, $category, $image_url, $id]);
+            $stmt = $pdo->prepare("UPDATE menu SET name = ?, description = ?, price = ?, image_url = ? WHERE id = ?");
+            $stmt->execute([$name, $description, $price, $image_url, $id]);
             echo json_encode(['success' => 'Menu item updated successfully.']);
         } catch (PDOException $e) {
             log_error($e->getMessage());
