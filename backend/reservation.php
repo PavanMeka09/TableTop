@@ -4,10 +4,6 @@ require_once 'config.php';
 
 header('Content-Type: application/json');
 
-// function validate_csrf_token($token) {
-//     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
-// }
-
 function log_error($msg) {
     error_log($msg, 3, __DIR__ . '/../error.log');
 }
@@ -16,13 +12,6 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'POST') {
     $action = $_POST['action'] ?? '';
-    // $csrf_token = $_POST['csrf_token'] ?? '';
-
-    // if (!validate_csrf_token($csrf_token)) {
-    //     echo json_encode(['error' => 'Invalid CSRF token.']);
-    //     http_response_code(403);
-    //     exit;
-    // }
 
     if ($action === 'create_reservation') {
         if (!isset($_SESSION['user_id'])) {
@@ -139,17 +128,27 @@ if ($method === 'POST') {
             echo json_encode(['error' => 'Failed to get reservations.']);
         }
     } elseif ($action === 'get_booked_times') {
-        // Get all booked time slots for a given date (returns array of times in 'HH:MM:SS' format)
         $date = $_POST['date'] ?? null;
         if (!$date) {
             echo json_encode(['error' => 'Date is required.']);
             exit;
         }
         try {
-            $stmt = $pdo->prepare("SELECT DISTINCT TIME(reservation_time) as time FROM reservations WHERE DATE(reservation_time) = ? AND status != 'cancelled'");
+            $stmt = $pdo->prepare("SELECT table_number, TIME(reservation_time) as time FROM reservations WHERE DATE(reservation_time) = ? AND status != 'cancelled'");
             $stmt->execute([$date]);
-            $times = $stmt->fetchAll(PDO::FETCH_COLUMN);
-            echo json_encode(['booked_times' => $times]);
+            $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Group bookings by time slot
+            $bookedTablesByTime = [];
+            foreach ($bookings as $booking) {
+                $time = $booking['time'];
+                if (!isset($bookedTablesByTime[$time])) {
+                    $bookedTablesByTime[$time] = [];
+                }
+                $bookedTablesByTime[$time][] = $booking['table_number'];
+            }
+            
+            echo json_encode(['booked_tables_by_time' => $bookedTablesByTime]);
         } catch (PDOException $e) {
             echo json_encode(['error' => 'Failed to fetch booked times.']);
         }

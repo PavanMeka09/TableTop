@@ -14,31 +14,23 @@
             <div class="flex justify-between items-center py-4">
                 <div class="flex items-center space-x-2">
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
-                    <a href="index.html"><h1 class="text-2xl font-bold text-amber-600">TableTop</h1></a>
+                    <a href="index.html" class="cursor-pointer"><h1 class="text-2xl font-bold text-amber-600">TableTop</h1></a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="pages/login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors">Login</a>
-                    <button id="mobile-menu-button" class="md:hidden text-gray-700">
-                        <i class="fas fa-bars text-2xl"></i>
-                    </button>
+                    <a href="pages/login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors login-btn cursor-pointer">Login</a>
                 </div>
-            </div>
-            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100">
-                <a href="#" class="block py-2 text-gray-700 hover:text-amber-600">Home</a>
-                <a href="pages/menu.html" class="block py-2 text-gray-700 hover:text-amber-600">Menu</a>
-                <a href="pages/reservations.html" class="block py-2 text-gray-700 hover:text-amber-600">Reservations</a>
             </div>
         </div>
     </nav>
 
-    <header class="bg-cover bg-center h-screen relative" style="background-image: url('assets/images/restaurant.jpg');">
-        <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+    <header class="bg-cover bg-center h-screen relative" style="background-image: url('https://t4.ftcdn.net/jpg/02/94/26/33/360_F_294263329_1IgvqNgDbhmQNgDxkhlW433uOFuIDar4.jpg');">
+        <div class="absolute inset-0 bg-[rgba(0,0,0,0.7)] backdrop-blur"></div>
         <div class="container mx-auto h-full flex flex-col items-center justify-center text-center relative z-10 px-4">
             <h2 class="text-white text-5xl md:text-6xl font-bold leading-tight mb-6">Exquisite Cuisine <br> Unforgettable Experience</h2>
             <p class="text-white text-xl md:text-2xl max-w-2xl mx-auto mb-10">Savor the finest flavors crafted with passion by our award-winning chefs</p>
             <div class="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
-                <a href="pages/menu.html" class="bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-lg transition-colors font-medium">Order Online</a>
-                <a href="pages/reservations.html" class="bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-lg transition-colors font-medium">Reserve a Table</a>
+                <a href="pages/menu.html" class="bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-lg transition-colors font-medium cursor-pointer">Order Online</a>
+                <a href="pages/reservations.html" class="bg-transparent border-2 border-white hover:bg-white hover:text-gray-900 text-white px-8 py-4 rounded-lg transition-colors font-medium cursor-pointer">Reserve a Table</a>
             </div>
         </div>
     </header>
@@ -141,7 +133,7 @@
             </div>
             
             <div class="text-center mt-16">
-                <a href="pages/menu.html" class="inline-block bg-amber-600 hover:bg-amber-700 text-white px-10 py-4 rounded-lg transition-colors font-medium">View Full Menu</a>
+                <a href="pages/menu.html" class="inline-block bg-amber-600 hover:bg-amber-700 text-white px-10 py-4 rounded-lg transition-colors font-medium cursor-pointer">View Full Menu</a>
             </div>
         </div>
     </section>
@@ -222,7 +214,7 @@
             <h3 class="text-3xl font-bold text-white mb-6">Reserve Your Table Today</h3>
             <p class="text-white text-xl mb-10 max-w-2xl mx-auto">Experience our exceptional cuisine and service.</p>
             <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
-                <a href="pages/menu.html" class="bg-transparent border-2 border-white hover:bg-white hover:text-amber-600 text-white px-10 py-4 rounded-lg transition-colors font-medium">Book Online</a>
+                <a href="pages/menu.html" class="bg-transparent border-2 border-white hover:bg-white hover:text-amber-600 text-white px-10 py-4 rounded-lg transition-colors font-medium cursor-pointer">Book Online</a>
             </div>
         </div>
     </section>
@@ -255,17 +247,67 @@
         </div>
     </section>
 
-    <footer class="bg-gray-900 text-white pb    -8">
-        <div class="border-t border-gray-800 pt-8 text-center text-gray-400">
+    <footer class="bg-gray-900 text-white p-6">
+        <div class="border-t border-gray-800 text-center text-gray-400">
             <p>&copy; 2025 TableTop. All rights reserved.</p>
         </div>
     </footer>
-
+    
     <script>
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        });
+        // Logout handler function
+        function handleLogout(e) {
+            e.preventDefault();
+            fetch('backend/auth.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ action: 'logout' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.reload();
+                }
+            })
+            .catch(error => console.error('Logout error:', error));
+        }
+
+        // Check if user is logged in and update the UI
+        function updateAuthUI() {
+            const nav = document.querySelector('nav .flex.items-center.space-x-4');
+            const loginBtn = nav.querySelector('.login-btn');
+            const logoutBtn = nav.querySelector('.logout-btn');
+
+            fetch('backend/auth.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ action: 'check_session' })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.logged_in) {
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    if (!logoutBtn) {
+                        const logout = document.createElement('a');
+                        logout.textContent = 'Logout';
+                        logout.href = '#';
+                        logout.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors logout-btn cursor-pointer';
+                        logout.onclick = handleLogout;
+                        nav.appendChild(logout);
+                    }
+                } else {
+                    if (loginBtn) loginBtn.style.display = '';
+                    if (logoutBtn) logoutBtn.remove();
+                }
+            })
+            .catch(error => {
+                console.error('Auth check failed:', error);
+                if (loginBtn) loginBtn.style.display = '';
+                if (logoutBtn) logoutBtn.remove();
+            });
+        }
+
+        // Run the check when the page loads
+        document.addEventListener('DOMContentLoaded', updateAuthUI);
     </script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once 'config.php';
-require_once __DIR__ . '/../vendor/autoload.php'; // Razorpay SDK
+require_once __DIR__ . '/../vendor/autoload.php';
 use Razorpay\Api\Api;
 
 header('Content-Type: application/json');
@@ -10,8 +10,8 @@ function log_error($msg) {
     error_log($msg, 3, __DIR__ . '/../error.log');
 }
 
-$razorpay_key_id = 'rzp_test_M0ttAHjE4Tsx3R'; // Replace with your Razorpay Test Key ID
-$razorpay_key_secret = 'koUssWPtH2cXv4ItE0AnMlvh'; // Replace with your Razorpay Test Key Secret
+$razorpay_key_id = 'rzp_test_M0ttAHjE4Tsx3R'; 
+$razorpay_key_secret = 'koUssWPtH2cXv4ItE0AnMlvh';
 
 $method = $_SERVER['REQUEST_METHOD'];
 

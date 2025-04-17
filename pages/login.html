@@ -6,10 +6,28 @@
     <title>TableTop | Auth</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Custom styles for hover effects and responsive design */
+        .interactive-element {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.3);
+        }
+        
+        /* Responsive adjustments using flexbox */
+        @media (max-width: 640px) {
+            .auth-container {
+                padding: 1rem;
+            }
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
     <!-- Back Button -->
-    <a href="../index.html" class="fixed top-6 left-6 text-amber-600 hover:text-amber-700 transition-colors">
+    <a href="../index.html" class="fixed top-6 left-6 text-amber-600 hover:text-amber-700 transition-colors cursor-pointer">
         <i class="fas fa-arrow-left text-2xl"></i>
     </a>
 
@@ -45,7 +63,7 @@
                                           focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent pr-10
                                           transition-shadow">
                             <button type="button" onclick="togglePassword('loginPassword', this)"
-                                    class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
                                 <i class="fas fa-eye text-gray-400 hover:text-gray-500 transition-colors"></i>
                             </button>
                         </div>
@@ -55,18 +73,15 @@
                 <button type="submit" 
                         class="w-full bg-amber-600 text-white py-2.5 px-4 rounded-lg hover:bg-amber-700 
                                focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 
-                               font-medium transition-colors">
+                               font-medium transition-colors cursor-pointer">
                     Sign In
                 </button>
-                <div class="text-right mt-2">
-                    <button type="button" class="text-amber-600 hover:text-amber-700 text-sm font-medium" onclick="showForgotPasswordModal()">Forgot Password?</button>
-                </div>
             </form>
 
             <div class="text-center text-sm">
                 <span class="text-gray-600">Don't have an account? </span>
                 <button onclick="showSignup()" 
-                        class="text-amber-600 hover:text-amber-700 font-medium transition-colors">
+                        class="text-amber-600 hover:text-amber-700 font-medium transition-colors cursor-pointer">
                     Create Account
                 </button>
             </div>
@@ -97,7 +112,7 @@
                                    class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg text-gray-900 
                                           focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-shadow">
                             <button type="button" id="sendOtpBtn" onclick="sendOTP()"
-                                    class="bg-amber-600 text-white px-4 py-2.5 rounded-lg hover:bg-amber-700 transition-colors">
+                                    class="bg-amber-600 text-white px-4 py-2.5 rounded-lg hover:bg-amber-700 transition-colors cursor-pointer">
                                 Send OTP
                             </button>
                         </div>
@@ -110,11 +125,11 @@
                                           focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-shadow"
                                    autocomplete="one-time-code" oninput="onOtpInput()">
                             <button type="button" onclick="verifyOTP()" id="verifyOtpBtn" 
-                                    class="bg-amber-600 text-white px-4 py-2.5 rounded-lg hover:bg-amber-700 transition-colors">
+                                    class="bg-amber-600 text-white px-4 py-2.5 rounded-lg hover:bg-amber-700 transition-colors cursor-pointer">
                                 Verify
                             </button>
                         </div>
-                        <button type="button" onclick="sendOTP()" class="text-sm text-amber-600 hover:text-amber-700 transition-colors">
+                        <button type="button" onclick="sendOTP()" class="text-sm text-amber-600 hover:text-amber-700 transition-colors cursor-pointer">
                             Resend OTP
                         </button>
                     </div>
@@ -125,12 +140,12 @@
                                    class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg text-gray-900 
                                           focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent pr-10 transition-shadow">
                             <button type="button" onclick="togglePassword('signupPassword', this)"
-                                    class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                    class="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer">
                                 <i class="fas fa-eye text-gray-400 hover:text-gray-500"></i>
                             </button>
                         </div>
                         <button type="submit" id="signupBtn" 
-                                class="w-full bg-amber-600 text-white py-2.5 rounded-lg hover:bg-amber-700 transition-colors">
+                                class="w-full bg-amber-600 text-white py-2.5 rounded-lg hover:bg-amber-700 transition-colors cursor-pointer">
                             Create Account
                         </button>
                     </div>
@@ -139,36 +154,10 @@
             <div class="text-center text-sm">
                 <span class="text-gray-600">Already have an account? </span>
                 <button onclick="showLogin()" 
-                        class="text-amber-600 hover:text-amber-700 font-medium transition-colors">
+                        class="text-amber-600 hover:text-amber-700 font-medium transition-colors cursor-pointer">
                     Sign In
                 </button>
             </div>
-        </div>
-    </div>
-
-    <div id="forgotPasswordModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden" aria-modal="true" role="dialog" tabindex="-1">
-        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative">
-            <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600" onclick="closeForgotPasswordModal()" aria-label="Close"><i class="fas fa-times"></i></button>
-            <h2 class="text-xl font-bold mb-4">Reset Password</h2>
-            <form id="forgotPasswordForm" onsubmit="handleForgotPassword(event)">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                <input type="email" id="forgotEmail" required class="w-full px-3 py-2 border border-gray-300 rounded mb-4">
-                <button type="submit" class="w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700">Send Reset Link</button>
-            </form>
-            <div id="resetFeedback" class="mt-4 text-sm"></div>
-        </div>
-    </div>
-    <div id="resetPasswordModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 hidden" aria-modal="true" role="dialog" tabindex="-1">
-        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md relative">
-            <button class="absolute top-2 right-2 text-gray-400 hover:text-gray-600" onclick="closeResetPasswordModal()" aria-label="Close"><i class="fas fa-times"></i></button>
-            <h2 class="text-xl font-bold mb-4">Set New Password</h2>
-            <form id="resetPasswordForm" onsubmit="handleResetPassword(event)">
-                <input type="hidden" id="resetToken">
-                <label class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
-                <input type="password" id="newPassword" required class="w-full px-3 py-2 border border-gray-300 rounded mb-4">
-                <button type="submit" class="w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700">Reset Password</button>
-            </form>
-            <div id="resetPasswordFeedback" class="mt-4 text-sm"></div>
         </div>
     </div>
 
@@ -293,61 +282,6 @@
             } else {
                 alert('Account created successfully! Please log in.');
                 showLogin();
-            }
-        }
-
-        function showForgotPasswordModal() {
-            document.getElementById('forgotPasswordModal').classList.remove('hidden');
-            document.getElementById('forgotEmail').focus();
-        }
-        function closeForgotPasswordModal() {
-            document.getElementById('forgotPasswordModal').classList.add('hidden');
-            document.getElementById('resetFeedback').textContent = '';
-        }
-        async function handleForgotPassword(e) {
-            e.preventDefault();
-            const email = document.getElementById('forgotEmail').value.trim();
-            if (!email) return;
-            document.getElementById('resetFeedback').textContent = 'Sending reset link...';
-            const res = await fetch('../backend/auth.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ action: 'forgot_password', email })
-            });
-            const data = await res.json();
-            if (data.success) {
-                document.getElementById('resetFeedback').textContent = 'Check your email for the reset link.';
-            } else {
-                document.getElementById('resetFeedback').textContent = data.error || 'Failed to send reset link.';
-            }
-        }
-        // Password reset modal logic (token-based)
-        function showResetPasswordModal(token) {
-            document.getElementById('resetToken').value = token;
-            document.getElementById('resetPasswordModal').classList.remove('hidden');
-            document.getElementById('newPassword').focus();
-        }
-        function closeResetPasswordModal() {
-            document.getElementById('resetPasswordModal').classList.add('hidden');
-            document.getElementById('resetPasswordFeedback').textContent = '';
-        }
-        async function handleResetPassword(e) {
-            e.preventDefault();
-            const token = document.getElementById('resetToken').value;
-            const password = document.getElementById('newPassword').value;
-            if (!token || !password) return;
-            document.getElementById('resetPasswordFeedback').textContent = 'Resetting password...';
-            const res = await fetch('../backend/auth.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ action: 'reset_password', token, password })
-            });
-            const data = await res.json();
-            if (data.success) {
-                document.getElementById('resetPasswordFeedback').textContent = 'Password reset successful! You can now log in.';
-                setTimeout(() => { closeResetPasswordModal(); showLogin(); }, 2000);
-            } else {
-                document.getElementById('resetPasswordFeedback').textContent = data.error || 'Failed to reset password.';
             }
         }
     </script>

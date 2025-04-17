@@ -4,10 +4,6 @@ require_once 'config.php';
 
 header('Content-Type: application/json');
 
-// function validate_csrf_token($token) {
-//     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
-// }
-
 function log_error($msg) {
     error_log($msg, 3, __DIR__ . '/../error.log');
 }
@@ -18,7 +14,6 @@ if ($method === 'GET') {
     try {
         $stmt = $pdo->query("SELECT * FROM menu");
         $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // Fix image_url for frontend (remove leading .. if present)
         foreach ($menuItems as &$item) {
             if (!empty($item['image_url'])) {
                 $item['image_url'] = preg_replace('/^\.\./', '', $item['image_url']);
@@ -30,13 +25,6 @@ if ($method === 'GET') {
     }
 } elseif ($method === 'POST') {
     $action = $_POST['action'] ?? '';
-    // $csrf_token = $_POST['csrf_token'] ?? '';
-
-    // if (!validate_csrf_token($csrf_token)) {
-    //     echo json_encode(['error' => 'Invalid CSRF token.']);
-    //     http_response_code(403);
-    //     exit;
-    // }
 
     if ($action === 'add_menu_item') {
         if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
@@ -49,7 +37,6 @@ if ($method === 'GET') {
         $price = floatval($_POST['price'] ?? 0);
         $image_url = $_POST['image_url'] ?? '';
 
-        // Handle file upload if present
         if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
             $target = '../assets/images/menu/' . basename($_FILES['image']['name']);
             if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {

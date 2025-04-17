@@ -4,9 +4,6 @@ require_once 'config.php';
 
 header('Content-Type: application/json');
 
-// function validate_csrf_token($token) {
-//     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
-// }
 
 function log_error($msg) {
     error_log($msg, 3, __DIR__ . '/../error.log');
@@ -16,13 +13,6 @@ $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'POST') {
     $action = $_POST['action'] ?? '';
-    // $csrf_token = $_POST['csrf_token'] ?? '';
-
-    // if (!validate_csrf_token($csrf_token)) {
-    //     echo json_encode(['error' => 'Invalid CSRF token.']);
-    //     http_response_code(403);
-    //     exit;
-    // }
 
     if ($action === 'create_feedback') {
         if (!isset($_SESSION['user_id'])) {

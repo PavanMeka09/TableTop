@@ -1,6 +1,3 @@
-// Main functionality for login and registration
-
-// Login function
 async function login(email, password) {
     if (!email || !password) {
         console.error('Email and password are required.');
