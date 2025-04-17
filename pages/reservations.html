@@ -7,106 +7,56 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-50">
-    <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4">
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-md sticky top-0 z-40 mb-8">
+        <div class="container mx-auto px-8">
             <div class="flex justify-between items-center py-4">
                 <a href="../index.html" class="flex items-center space-x-2">
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
                     <h1 class="text-2xl font-bold text-amber-600">TableTop</h1>
                 </a>
+                <div class="hidden md:flex items-center space-x-8 text-lg font-medium">
+                    <a href="../index.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-home"></i> Home</a>
+                    <a href="menu.html" class="hover:text-amber-600 transition-colors">Menu</a>
+                    <a href="reservations.html" class="hover:text-amber-600 transition-colors">Reservations</a>
+                    <a href="trackorder.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-truck"></i> Track Order</a>
+                </div>
                 <div class="flex items-center space-x-4">
-                    <a href="menu.html" class="text-gray-700 hover:text-amber-600 transition-colors">Menu</a>
-                    <a href="reservations.html" class="text-amber-600 font-semibold border-b-2 border-amber-600">Reservations</a>
-                    <a href="trackorder.html" class="text-gray-700 hover:text-amber-600 transition-colors">Track Order</a>
                     <a href="login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md login-btn">Login</a>
                     <button id="mobile-menu-button" class="md:hidden text-gray-700"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
             </div>
-            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100">
+            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100 px-8">
+                <a href="../index.html" class="block py-2 text-gray-700 hover:text-amber-600 flex items-center gap-1"><i class="fas fa-home"></i> Home</a>
                 <a href="menu.html" class="block py-2 text-gray-700 hover:text-amber-600">Menu</a>
-                <a href="reservations.html" class="block py-2 text-amber-600 font-semibold border-b-2 border-amber-600">Reservations</a>
-                <a href="trackorder.html" class="block py-2 text-gray-700 hover:text-amber-600">Track Order</a>
+                <a href="reservations.html" class="block py-2 text-gray-700 hover:text-amber-600">Reservations</a>
+                <a href="trackorder.html" class="block py-2 text-gray-700 hover:text-amber-600 flex items-center gap-1"><i class="fas fa-truck"></i> Track Order</a>
             </div>
         </div>
     </nav>
 
+    <main class="container mx-auto px-6 py-8">
+        <section class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
     <main class="container mx-auto p-4">
         <!-- Date Selection -->
         <div class="max-w-4xl mx-auto mb-8">
             <h2 class="text-2xl font-bold mb-4 text-center">Select Reservation Date</h2>
-            <input type="date" id="reservationDate" class="w-full p-4 rounded border mb-8" min="{{today}}">
+            <input type="date" id="reservationDate" class="w-40 p-2 rounded border mb-8 text-sm" min="{{today}}">
         </div>
         <!-- Time Slot Selection -->
         <div class="max-w-4xl mx-auto mb-8">
             <h2 class="text-2xl font-bold mb-4 text-center">Select Time Slot</h2>
-            <div class="grid gap-4 md:grid-cols-3">
-                <button class="bg-white p-4 rounded shadow text-left hover:shadow-md" onclick="selectTime('18:00')">
-                    <h3 class="font-bold">6:00 PM</h3>
-                    <p class="text-gray-600">Dinner</p>
-                </button>
-                <button class="bg-white p-4 rounded shadow text-left hover:shadow-md" onclick="selectTime('19:00')">
-                    <h3 class="font-bold">7:00 PM</h3>
-                    <p class="text-gray-600">Dinner</p>
-                </button>
-                <button class="bg-white p-4 rounded shadow text-left hover:shadow-md" onclick="selectTime('20:00')">
-                    <h3 class="font-bold">8:00 PM</h3>
-                    <p class="text-gray-600">Dinner</p>
-                </button>
-            </div>
+            <div id="timeSlots" class="grid gap-4 md:grid-cols-4"></div>
+            <div id="timeFeedback" class="text-center text-red-600 text-sm mt-2"></div>
         </div>
-
         <!-- Table Selection -->
         <div id="tableSelection" class="max-w-4xl mx-auto hidden">
             <h2 class="text-2xl font-bold mb-4">Available Tables</h2>
-            <div class="grid gap-4 md:grid-cols-3">
-                <button class="bg-white p-4 rounded shadow text-left hover:shadow-md" onclick="selectTable(1)">
-                    <h3 class="font-bold">Table 1</h3>
-                    <p class="text-gray-600">4 Seats</p>
-                    <span class="text-green-600">Available</span>
-                </button>
-                <button class="bg-white p-4 rounded shadow text-left hover:shadow-md" onclick="selectTable(2)">
-                    <h3 class="font-bold">Table 2</h3>
-                    <p class="text-gray-600">2 Seats</p>
-                    <span class="text-green-600">Available</span>
-                </button>
-                <button class="bg-white p-4 rounded shadow text-left hover:shadow-md" disabled>
-                    <h3 class="font-bold">Table 3</h3>
-                    <p class="text-gray-600">6 Seats</p>
-                    <span class="text-red-600">Booked</span>
-                </button>
-            </div>
+            <div id="tablesGrid" class="grid gap-4 md:grid-cols-5"></div>
+            <div id="tableFeedback" class="text-center text-red-600 text-sm mt-2"></div>
         </div>
+        <div id="confirmationMsg" class="text-center text-green-600 text-lg font-bold mt-8"></div>
     </main>
-
-    <footer class="bg-gray-800 text-white py-16 mt-20">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                <div>
-                    <h4 class="text-2xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-utensils text-amber-500 mr-3"></i>
-                        TableTop
-                    </h4>
-                    <p class="text-gray-400 mb-6">Experience fine dining at its best with our award-winning cuisine and exceptional service.</p>
-                    <div class="flex space-x-5">
-                        <a href="https://github.com/PavanMeka09/TableTop" target="_blank" class="text-gray-400 hover:text-amber-500 transition-colors">
-                            <i class="fa-brands fa-github text-3xl"></i>
-                        </a>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="text-lg font-semibold mb-6">Quick Links</h4>
-                    <ul class="space-y-3">
-                        <li><a href="menu.html" class="text-gray-400 hover:text-amber-500 transition-colors flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Our Menu</a></li>
-                        <li><a href="reservations.html" class="text-amber-500 flex items-center"><i class="fas fa-chevron-right mr-2 text-amber-500"></i> Reservations</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="border-t border-gray-700 mt-12 pt-8 text-center">
-                <p class="text-gray-400">&copy; 2025 TableTop. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
 
     <script>
         document.getElementById('mobile-menu-button').addEventListener('click', function() {
@@ -114,11 +64,9 @@
             mobileMenu.classList.toggle('hidden');
         });
         // Session check and UI update
-        async function checkSessionAndUpdateUI() {
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loginButton = document.querySelector('.login-btn');
             const nav = document.querySelector('nav .flex.items-center.space-x-4');
-            let loginBtn = nav.querySelector('a.login-btn');
-            let logoutBtn = nav.querySelector('.logout-btn');
-            if (logoutBtn) logoutBtn.remove();
             try {
                 const res = await fetch('../backend/auth.php', {
                     method: 'POST',
@@ -127,7 +75,7 @@
                 });
                 const data = await res.json();
                 if (data.logged_in) {
-                    if (loginBtn) loginBtn.style.display = 'none';
+                    loginButton.style.display = 'none';
                     const logout = document.createElement('a');
                     logout.textContent = 'Logout';
                     logout.href = '#';
@@ -143,21 +91,19 @@
                     };
                     nav.appendChild(logout);
                 } else {
-                    if (loginBtn) loginBtn.style.display = '';
+                    window.location.href = 'login.html';
                 }
             } catch (e) {
-                if (loginBtn) loginBtn.style.display = '';
+                window.location.href = 'login.html';
             }
-        }
-        document.addEventListener('DOMContentLoaded', checkSessionAndUpdateUI);
-        // Toast feedback
-        function showToast(msg, type = 'info') {
-            let toast = document.createElement('div');
-            toast.className = `fixed bottom-8 right-8 z-50 px-6 py-3 rounded shadow-lg text-white font-semibold ${type === 'error' ? 'bg-red-600' : type === 'success' ? 'bg-green-600' : 'bg-amber-600'}`;
-            toast.textContent = msg;
-            document.body.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3000);
-        }
+        });
+        // Remove toast feedback, use inline feedback instead
+        function showToast(msg, type = 'info') {}
+        // Time slots config
+        const TIME_SLOTS = [
+            '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00'
+        ];
+        const TABLE_COUNT = 10;
         let selectedTime = null;
         let selectedTable = null;
         // Set today's date as min for date input
@@ -165,26 +111,110 @@
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('reservationDate').min = today;
             document.getElementById('reservationDate').value = today;
+            renderTimeSlots();
+            fetchBookedTimes();
         });
+        document.getElementById('reservationDate').addEventListener('change', function() {
+            selectedTime = null;
+            selectedTable = null;
+            document.getElementById('tableSelection').classList.add('hidden');
+            document.getElementById('confirmationMsg').textContent = '';
+            renderTimeSlots();
+            fetchBookedTimes();
+        });
+        // Convert 24-hour time slots to 12-hour format
+        function convertTo12HourFormat(time) {
+            const [hour, minute] = time.split(':');
+            const hourInt = parseInt(hour);
+            const period = hourInt >= 12 ? 'PM' : 'AM';
+            const hour12 = hourInt % 12 || 12;
+            return `${hour12}:${minute} ${period}`;
+        }
 
+        function renderTimeSlots(bookedTimes = []) {
+            const container = document.getElementById('timeSlots');
+            container.innerHTML = '';
+            TIME_SLOTS.forEach(slot => {
+                const btn = document.createElement('button');
+                btn.className = 'bg-white p-2 rounded shadow text-left hover:shadow-md text-sm';
+                btn.textContent = convertTo12HourFormat(slot);
+                btn.disabled = bookedTimes.includes(slot + ':00');
+                if (btn.disabled) {
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    btn.innerHTML += ' <span class="text-red-600">(Booked)</span>';
+                }
+                btn.onclick = () => selectTime(slot);
+                container.appendChild(btn);
+            });
+        }
+        function fetchBookedTimes() {
+            const date = document.getElementById('reservationDate').value;
+            fetch('../backend/reservation.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ action: 'get_booked_times', date })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.booked_times) {
+                    renderTimeSlots(data.booked_times);
+                } else {
+                    renderTimeSlots([]);
+                }
+            });
+        }
         function selectTime(time) {
             selectedTime = time;
             document.getElementById('tableSelection').classList.remove('hidden');
-            window.scrollTo({ top: document.getElementById('tableSelection').offsetTop, behavior: 'smooth' });
+            document.getElementById('confirmationMsg').textContent = '';
+            renderTables();
+            fetchBookedTables();
         }
-
+        function renderTables(bookedTables = []) {
+            const grid = document.getElementById('tablesGrid');
+            grid.innerHTML = '';
+            for (let i = 1; i <= TABLE_COUNT; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'bg-white p-4 rounded shadow text-left hover:shadow-md';
+                btn.innerHTML = `<h3 class="font-bold">Table ${i}</h3><span class="text-green-600">Available</span>`;
+                btn.disabled = bookedTables.includes(i.toString());
+                if (btn.disabled) {
+                    btn.classList.add('opacity-50', 'cursor-not-allowed');
+                    btn.innerHTML = `<h3 class="font-bold">Table ${i}</h3><span class="text-red-600">Booked</span>`;
+                }
+                btn.onclick = () => selectTable(i);
+                grid.appendChild(btn);
+            }
+        }
+        function fetchBookedTables() {
+            const date = document.getElementById('reservationDate').value;
+            if (!selectedTime) return;
+            fetch('../backend/reservation.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ action: 'get_booked_tables', date, time: selectedTime })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.booked_tables) {
+                    renderTables(data.booked_tables);
+                } else {
+                    renderTables([]);
+                }
+            });
+        }
         async function selectTable(tableNumber) {
+            if (!confirm(`Confirm reservation for Table ${tableNumber} at ${selectedTime}?`)) return;
             selectedTable = tableNumber;
             const date = document.getElementById('reservationDate').value;
-            if (!date) { showToast('Please select a reservation date.', 'error'); return; }
-            if (!selectedTime) { showToast('Please select a time slot.', 'error'); return; }
+            if (!date || !selectedTime) return;
             const reservation_time = date + ' ' + selectedTime + ':00';
             const data = new URLSearchParams({
                 action: 'create_reservation',
                 table_number: selectedTable,
                 reservation_time
             });
-            showToast('Booking table...', 'info');
+            document.getElementById('tableFeedback').textContent = 'Booking table...';
             fetch('../backend/reservation.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -193,14 +223,15 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showToast('Reservation confirmed!', 'success');
-                    setTimeout(() => window.location.reload(), 1200);
+                    document.getElementById('confirmationMsg').textContent = 'Reservation confirmed!';
+                    document.getElementById('tableFeedback').textContent = '';
+                    document.getElementById('tableSelection').classList.add('hidden');
                 } else {
-                    showToast(data.error || 'Failed to make reservation', 'error');
+                    document.getElementById('tableFeedback').textContent = data.error || 'Failed to make reservation';
                 }
             })
             .catch(error => {
-                showToast('Failed to make reservation', 'error');
+                document.getElementById('tableFeedback').textContent = 'Failed to make reservation';
             });
         }
     </script>

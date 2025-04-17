@@ -24,8 +24,13 @@ if ($method === 'POST') {
             exit;
         }
         $items = json_decode($_POST['items'] ?? '[]', true);
+        $address = trim($_POST['address'] ?? '');
         if (!is_array($items) || empty($items)) {
             echo json_encode(['error' => 'No items selected.']);
+            exit;
+        }
+        if (empty($address)) {
+            echo json_encode(['error' => 'Address is required.']);
             exit;
         }
         // Calculate total amount
@@ -69,8 +74,9 @@ if ($method === 'POST') {
         $razorpay_order_id = $_POST['razorpay_order_id'] ?? '';
         $razorpay_signature = $_POST['razorpay_signature'] ?? '';
         $items = json_decode($_POST['items'] ?? '[]', true);
-        if (!$razorpay_payment_id || !$razorpay_order_id || !$razorpay_signature || empty($items)) {
-            echo json_encode(['error' => 'Missing payment details.']);
+        $address = trim($_POST['address'] ?? '');
+        if (!$razorpay_payment_id || !$razorpay_order_id || !$razorpay_signature || empty($items) || empty($address)) {
+            echo json_encode(['error' => 'Missing payment details or address.']);
             exit;
         }
         // Verify signature
@@ -96,8 +102,8 @@ if ($method === 'POST') {
                 }
                 $total_price += $menu_item['price'] * $quantity;
             }
-            $stmt = $pdo->prepare('INSERT INTO orders (user_id, total_price) VALUES (?, ?)');
-            $stmt->execute([$user_id, $total_price]);
+            $stmt = $pdo->prepare('INSERT INTO orders (user_id, total_price, address) VALUES (?, ?, ?)');
+            $stmt->execute([$user_id, $total_price, $address]);
             $order_id = $pdo->lastInsertId();
             foreach ($items as $item) {
                 $menu_id = $item['menu_id'];

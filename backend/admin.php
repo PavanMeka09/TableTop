@@ -22,6 +22,13 @@ if ($method === 'GET') {
         try {
             $stmt = $pdo->query("SELECT * FROM orders");
             $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // Fetch items for each order
+            foreach ($orders as &$order) {
+                $order_id = $order['id'];
+                $stmtItems = $pdo->prepare("SELECT oi.quantity, m.name, m.price FROM order_items oi JOIN menu m ON oi.menu_id = m.id WHERE oi.order_id = ?");
+                $stmtItems->execute([$order_id]);
+                $order['items'] = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
+            }
             echo json_encode(['success' => true, 'data' => $orders]);
         } catch (PDOException $e) {
             log_error('Failed to get orders: ' . $e->getMessage());

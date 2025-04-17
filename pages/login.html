@@ -82,44 +82,32 @@
                 <h2 class="text-center text-2xl font-bold text-gray-900">Create Account</h2>
                 <p class="mt-2 text-center text-sm text-gray-600">Join us today</p>
             </div>
-            
             <form class="mt-8 space-y-6" onsubmit="handleSignup(event)">
                 <div class="space-y-4">
-                    <div id="stepName">
+                    <div>
                         <label class="block text-sm font-medium text-gray-700">Full Name</label>
-                        <div class="mt-1 flex gap-2">
-                            <input type="text" id="signupName" required 
-                                   class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg text-gray-900 
-                                          focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent
-                                          transition-shadow">
-                            <button type="button" onclick="goToEmailStep()" 
-                                    class="bg-amber-600 text-white px-4 py-2.5 rounded-lg hover:bg-amber-700 transition-colors">
-                                Next
-                            </button>
-                        </div>
+                        <input type="text" id="signupName" required 
+                               class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg text-gray-900 
+                                      focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-shadow">
                     </div>
-
-                    <div id="stepEmail" class="hidden space-y-4">
+                    <div>
                         <label class="block text-sm font-medium text-gray-700">Email</label>
                         <div class="mt-1 flex gap-2">
                             <input type="email" id="signupEmail" required 
                                    class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg text-gray-900 
-                                          focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent
-                                          transition-shadow">
+                                          focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-shadow">
                             <button type="button" id="sendOtpBtn" onclick="sendOTP()"
                                     class="bg-amber-600 text-white px-4 py-2.5 rounded-lg hover:bg-amber-700 transition-colors">
                                 Send OTP
                             </button>
                         </div>
                     </div>
-
-                    <div id="stepOtp" class="hidden space-y-4">
+                    <div>
                         <label class="block text-sm font-medium text-gray-700">Enter 4-digit OTP</label>
                         <div class="mt-1 flex gap-2">
-                            <input type="text" id="otpInput" maxlength="4" pattern="\\d{4}" inputmode="numeric"
+                            <input type="text" id="otpInput" maxlength="4" pattern="\d{4}" inputmode="numeric"
                                    class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg text-gray-900 text-center tracking-widest text-lg
-                                          focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent
-                                          transition-shadow"
+                                          focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-shadow"
                                    autocomplete="one-time-code" oninput="onOtpInput()">
                             <button type="button" onclick="verifyOTP()" id="verifyOtpBtn" 
                                     class="bg-amber-600 text-white px-4 py-2.5 rounded-lg hover:bg-amber-700 transition-colors">
@@ -130,27 +118,24 @@
                             Resend OTP
                         </button>
                     </div>
-
-                    <div id="stepPassword" class="hidden space-y-4">
+                    <div id="passwordSection" class="hidden">
                         <label class="block text-sm font-medium text-gray-700">Password</label>
-                        <div class="mt-1 relative"></div>
+                        <div class="mt-1 relative">
                             <input id="signupPassword" type="password" required 
                                    class="appearance-none block w-full px-3 py-2.5 border border-gray-300 rounded-lg text-gray-900 
-                                          focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent pr-10
-                                          transition-shadow">
+                                          focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent pr-10 transition-shadow">
                             <button type="button" onclick="togglePassword('signupPassword', this)"
                                     class="absolute inset-y-0 right-0 pr-3 flex items-center">
                                 <i class="fas fa-eye text-gray-400 hover:text-gray-500"></i>
                             </button>
                         </div>
                         <button type="submit" id="signupBtn" 
-                                class="w-full bg-amber-600 text-white py-2.5 rounded-lg hover:bg-amber-700 transition-colors"></button>
+                                class="w-full bg-amber-600 text-white py-2.5 rounded-lg hover:bg-amber-700 transition-colors">
                             Create Account
                         </button>
                     </div>
                 </div>
             </form>
-
             <div class="text-center text-sm">
                 <span class="text-gray-600">Already have an account? </span>
                 <button onclick="showLogin()" 
@@ -218,16 +203,51 @@
         }
 
         async function sendOTP() {
-            const email = document.getElementById('signupEmail').value;
-            if (!email) {
-                alert("Please enter your email address first");
-                return;
+            const email = document.getElementById('signupEmail').value.trim();
+            if (!email) { alert('Please enter your email.'); return; }
+            document.getElementById('sendOtpBtn').innerHTML = '<i class="fas fa-sync-alt animate-spin"></i>';
+            const res = await fetch('../backend/auth.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ action: 'send_otp', email })
+            });
+            const data = await res.json();
+            document.getElementById('sendOtpBtn').innerHTML = 'Send OTP';
+            if (data.success) {
+                alert('OTP sent to your email.');
+                document.getElementById('otpInput').value = '';
+                document.getElementById('otpInput').focus();
+            } else {
+                alert(data.error || 'Failed to send OTP.');
             }
-            
-            document.getElementById('otpSection').classList.remove('hidden');
-            document.getElementById('sendOtpBtn').innerHTML = '<i class="fas fa-sync-alt"></i> Resend OTP';
-            document.getElementById('signupBtn').classList.remove('hidden');
-            document.getElementById('otp1').focus();
+        }
+
+        function onOtpInput() {
+            const otp = document.getElementById('otpInput').value;
+            if (otp.length === 4) {
+                document.getElementById('verifyOtpBtn').focus();
+            }
+        }
+
+        async function verifyOTP() {
+            const otp = document.getElementById('otpInput').value;
+            const email = document.getElementById('signupEmail').value.trim();
+            if (!/^[0-9]{4}$/.test(otp)) { alert('Enter a valid 4-digit OTP.'); return; }
+            const res = await fetch('../backend/auth.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ action: 'verify_otp', otp, email })
+            });
+            const data = await res.json();
+            if (data.success) {
+                alert('OTP verified!');
+                document.getElementById('passwordSection').classList.remove('hidden');
+                document.getElementById('signupPassword').value = '';
+                document.getElementById('signupPassword').focus();
+                window.otpVerified = true;
+            } else {
+                alert(data.error || 'Invalid OTP.');
+            }
         }
 
         async function handleLogin(e) {
@@ -259,7 +279,9 @@
             const email = document.getElementById('signupEmail').value.trim();
             const password = document.getElementById('signupPassword').value;
             const otp = document.getElementById('otpInput').value;
-            if (!name || !email || !password || !otp) { alert('All fields are required.'); return; }
+            if (!name || !email || !otp) { alert('Name, Email, and OTP are required.'); return; }
+            if (!window.otpVerified) { alert('Please verify OTP before setting password.'); return; }
+            if (!password) { alert('Please enter a password.'); return; }
             const response = await fetch('../backend/auth.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -271,60 +293,6 @@
             } else {
                 alert('Account created successfully! Please log in.');
                 showLogin();
-            }
-        }
-
-        // Registration step logic
-        function goToEmailStep() {
-            const name = document.getElementById('signupName').value.trim();
-            if (!name) { alert('Please enter your name.'); return; }
-            document.getElementById('stepName').classList.add('hidden');
-            document.getElementById('stepEmail').classList.remove('hidden');
-        }
-        async function sendOTP() {
-            const email = document.getElementById('signupEmail').value.trim();
-            if (!email) { alert('Please enter your email.'); return; }
-            document.getElementById('sendOtpBtn').innerHTML = '<i class="fas fa-sync-alt animate-spin"></i>';
-            const res = await fetch('../backend/auth.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ action: 'send_otp', email })
-            });
-            const data = await res.json();
-            document.getElementById('sendOtpBtn').innerHTML = 'Send OTP';
-            if (data.success) {
-                alert('OTP sent to your email.');
-                document.getElementById('stepEmail').classList.add('hidden');
-                document.getElementById('stepOtp').classList.remove('hidden');
-                document.getElementById('otpInput').value = '';
-                document.getElementById('otpInput').focus();
-            } else {
-                alert(data.error || 'Failed to send OTP.');
-            }
-        }
-        function onOtpInput() {
-            const otp = document.getElementById('otpInput').value;
-            if (otp.length === 4) {
-                document.getElementById('verifyOtpBtn').focus();
-            }
-        }
-        async function verifyOTP() {
-            const otp = document.getElementById('otpInput').value;
-            if (!/^\d{4}$/.test(otp)) { alert('Enter a valid 4-digit OTP.'); return; }
-            const res = await fetch('../backend/auth.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ action: 'verify_otp', otp })
-            });
-            const data = await res.json();
-            if (data.success) {
-                alert('OTP verified!');
-                document.getElementById('stepOtp').classList.add('hidden');
-                document.getElementById('stepPassword').classList.remove('hidden');
-                document.getElementById('signupPassword').value = '';
-                document.getElementById('signupPassword').focus();
-            } else {
-                alert(data.error || 'Invalid OTP.');
             }
         }
 

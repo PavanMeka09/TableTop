@@ -32,10 +32,15 @@ if ($method === 'POST') {
 
         $user_id = $_SESSION['user_id'];
         $items = json_decode($_POST['items'] ?? '[]', true);
+        $address = trim($_POST['address'] ?? '');
         $total_price = 0;
 
         if (!is_array($items) || empty($items)) {
             echo json_encode(['error' => 'No items selected.']);
+            exit;
+        }
+        if (empty($address)) {
+            echo json_encode(['error' => 'Address is required.']);
             exit;
         }
 
@@ -60,8 +65,8 @@ if ($method === 'POST') {
             }
 
             // Create order
-            $stmt = $pdo->prepare("INSERT INTO orders (user_id, total_price) VALUES (?, ?)");
-            $stmt->execute([$user_id, $total_price]);
+            $stmt = $pdo->prepare("INSERT INTO orders (user_id, total_price, address) VALUES (?, ?, ?)");
+            $stmt->execute([$user_id, $total_price, $address]);
             $order_id = $pdo->lastInsertId();
 
             // Create order items
@@ -114,16 +119,39 @@ if ($method === 'POST') {
         }
 
         $user_id = $_SESSION['user_id'];
-
         try {
-            $stmt = $pdo->prepare("SELECT * FROM orders WHERE user_id = ?");
+            // Fetch orders with address
+            $stmt = $pdo->prepare("SELECT id, total_price, created_at, status, address FROM orders WHERE user_id = ?");
             $stmt->execute([$user_id]);
             $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            echo json_encode($orders);
+            // Fetch order items for each order
+            foreach ($orders as &$order) {
+                $order_id = $order['id'];
+                $stmtItems = $pdo->prepare("SELECT oi.quantity, m.name, m.price FROM order_items oi JOIN menu m ON oi.menu_id = m.id WHERE oi.order_id = ?");
+                $stmtItems->execute([$order_id]);
+                $order['items'] = $stmtItems->fetchAll(PDO::FETCH_ASSOC);
+
+                // Check if feedback exists for the order
+                $stmtFeedback = $pdo->prepare("SELECT COUNT(*) FROM feedback WHERE order_id = ?");
+                $stmtFeedback->execute([$order_id]);
+                $order['feedbackExists'] = $stmtFeedback->fetchColumn() > 0;
+            }
+
+            // Fetch all reservations for the user
+            $stmtRes = $pdo->prepare("SELECT table_number, reservation_time, status FROM reservations WHERE user_id = ? ORDER BY reservation_time DESC");
+            $stmtRes->execute([$user_id]);
+            $reservations = $stmtRes->fetchAll(PDO::FETCH_ASSOC);
+
+            echo json_encode([
+                'orders' => $orders,
+                'reservations' => $reservations
+            ]);
         } catch (PDOException $e) {
-            echo json_encode(['error' => 'Failed to get orders.']);
+            log_error('get_orders SQL error: ' . $e->getMessage());
+            echo json_encode(['error' => 'Failed to fetch orders. SQL: ' . $e->getMessage()]);
         }
+        exit;
     } else {
         echo json_encode(['error' => 'Invalid action.']);
     }

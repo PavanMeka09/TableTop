@@ -23,6 +23,7 @@ CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     total_price DECIMAL(10, 2) NOT NULL,
+    address VARCHAR(255) NOT NULL,
     status ENUM('pending', 'preparing', 'on the way', 'delivered') DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id)
@@ -71,3 +72,9 @@ CREATE TABLE payments (
 );
 
 ALTER TABLE payments ADD COLUMN razorpay_payment_id VARCHAR(255) DEFAULT NULL;
+
+-- If table already exists, run this to add address column:
+ALTER TABLE orders ADD COLUMN address VARCHAR(255) NOT NULL AFTER total_price;
+
+-- Add the order_id column to the feedback table
+ALTER TABLE feedback ADD COLUMN order_id INT NOT NULL AFTER user_id, ADD FOREIGN KEY (order_id) REFERENCES orders(id);

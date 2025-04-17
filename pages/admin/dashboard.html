@@ -10,62 +10,35 @@
 </head>
 <body class="bg-gray-50">
     <nav class="bg-white shadow-md sticky top-0 z-50">
-        <div class="container mx-auto px-4">
+        <div class="container mx-auto px-8">
             <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-2">
+                <a href="dashboard.html" class="flex items-center space-x-2">
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
                     <h1 class="text-2xl font-bold text-amber-600">TableTop Admin</h1>
+                </a>
+                <div class="hidden md:flex items-center space-x-8 text-lg font-medium">
+                    <a href="dashboard.html" class="hover:text-amber-600 transition-colors">Dashboard</a>
+                    <a href="menu.html" class="hover:text-amber-600 transition-colors">Menu</a>
+                    <a href="orders.html" class="hover:text-amber-600 transition-colors">Orders</a>
+                    <a href="reservations.html" class="hover:text-amber-600 transition-colors">Reservations</a>
+                    <a href="feedback.html" class="hover:text-amber-600 transition-colors">Feedback</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="dashboard.html" class="text-amber-600 font-semibold border-b-2 border-amber-600">Dashboard</a>
-                    <a href="menu.html" class="text-gray-700 hover:text-amber-600 transition-colors">Menu</a>
-                    <a href="orders.html" class="text-gray-700 hover:text-amber-600 transition-colors">Orders</a>
-                    <a href="feedback.html" class="text-gray-700 hover:text-amber-600 transition-colors">Feedback</a>
-                    <a href="reservations.html" class="text-gray-700 hover:text-amber-600 transition-colors">Reservations</a>
                     <a href="../../pages/login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md login-btn">Login</a>
                     <button id="mobile-menu-button" class="md:hidden text-gray-700"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
             </div>
-            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100">
+            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100 px-8">
                 <a href="dashboard.html" class="block py-2 text-amber-600 font-semibold border-b-2 border-amber-600">Dashboard</a>
-                <a href="menu.html" class="block py-2 text-gray-700 hover:text-amber-600">Menu</a>
-                <a href="orders.html" class="block py-2 text-gray-700 hover:text-amber-600">Orders</a>
-                <a href="feedback.html" class="block py-2 text-gray-700 hover:text-amber-600">Feedback</a>
-                <a href="reservations.html" class="block py-2 text-gray-700 hover:text-amber-600">Reservations</a>
+                <a href="menu.html" class="block py-2 hover:text-amber-600">Menu</a>
+                <a href="orders.html" class="block py-2 hover:text-amber-600">Orders</a>
+                <a href="reservations.html" class="block py-2 hover:text-amber-600">Reservations</a>
+                <a href="feedback.html" class="block py-2 hover:text-amber-600">Feedback</a>
             </div>
         </div>
     </nav>
 
     <main class="container mx-auto p-6">
-        <div class="grid gap-6 md:grid-cols-3 mb-8">
-            <a href="menu.html" 
-               class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1">
-                <div class="bg-amber-50 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
-                    <i class="fas fa-utensils text-2xl text-amber-600"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900">Manage Menu</h3>
-                <p class="text-gray-600 mt-2">Add, edit, or remove menu items</p>
-            </a>
-
-            <a href="orders.html" 
-               class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1">
-                <div class="bg-amber-50 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
-                    <i class="fas fa-clipboard-list text-2xl text-amber-600"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900">Track Orders</h3>
-                <p class="text-gray-600 mt-2">Monitor and manage customer orders</p>
-            </a>
-
-            <a href="feedback.html" 
-               class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all transform hover:-translate-y-1">
-                <div class="bg-amber-50 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
-                    <i class="fas fa-comment-alt text-2xl text-amber-600"></i>
-                </div>
-                <h3 class="text-xl font-bold text-gray-900">Customer Feedback</h3>
-                <p class="text-gray-600 mt-2">View and respond to customer feedback</p>
-            </a>
-        </div>
-
         <div class="bg-white rounded-lg shadow-sm p-6">
             <h3 class="text-xl font-bold mb-6">Quick Overview</h3>
             <div class="grid gap-6 md:grid-cols-3">

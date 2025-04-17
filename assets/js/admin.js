@@ -67,7 +67,7 @@ function renderReservations(reservations) {
 // Fetch all feedback
 async function fetchAllFeedback() {
     try {
-        const response = await fetch('../backend/admin.php?action=get_all_feedback');
+        const response = await fetch('../backend/feedback.php?action=get_feedback'); // Corrected endpoint
         const data = await response.json();
         if (data.error) {
             alert(data.error);

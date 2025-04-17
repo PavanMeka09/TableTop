@@ -26,26 +26,28 @@ function renderMenuItems(items) {
     items.forEach(item => {
         const imgUrl = item.image_url ? (item.image_url.startsWith('/') ? item.image_url : item.image_url.replace('..','')) : 'https://via.placeholder.com/150';
         const menuItem = document.createElement('div');
-        menuItem.className = 'bg-white rounded-xl shadow-md overflow-hidden menu-item transition-transform duration-200 hover:shadow-xl hover:-translate-y-1 border border-gray-100';
+        menuItem.className = 'bg-white rounded-xl shadow-md overflow-hidden menu-item border border-gray-100 w-full max-w-xs mx-auto transition-transform duration-300 ease-in-out hover:-translate-y-2';
         menuItem.innerHTML = `
-            <div class="h-48 bg-cover bg-center transition-transform duration-200 hover:scale-105" style="background-image: url('${imgUrl}')"></div>
-            <div class="p-6">
-                <div class="flex justify-between items-start mb-4">
+            <div class="h-32 bg-cover bg-center" style="background-image: url('${imgUrl}')"></div>
+            <div class="p-4">
+                <div class="flex justify-between items-start mb-2">
                     <div>
-                        <h3 class="text-xl font-bold mb-2">${item.name}</h3>
-                        <p class="text-amber-600 font-semibold text-lg">₹${item.price}</p>
+                        <h3 class="text-lg font-bold mb-1">${item.name}</h3>
+                        <p class="text-amber-600 font-semibold text-base">₹${item.price}</p>
                     </div>
-                    <button class="add-to-cart text-amber-600 hover:text-white hover:bg-amber-600 focus:outline-none rounded-full p-2 transition-colors duration-200" title="Add to basket">
-                        <i class="fas fa-plus-circle text-3xl"></i>
+                    <button class="add-to-cart text-amber-600 cursor-pointer focus:outline-none rounded-full p-2" title="Add to basket">
+                        <i class="fas fa-plus-circle text-2xl"></i>
                     </button>
                 </div>
-                <p class="text-gray-600 mb-4">${item.description}</p>
+                <p class="text-gray-600 mb-2 text-sm">${item.description}</p>
             </div>
         `;
         // Add event for add-to-cart
         menuItem.querySelector('.add-to-cart').addEventListener('click', () => addToCart(item.id, item.name, item.price));
         menuContainer.appendChild(menuItem);
     });
+    // Adjust grid gap for better spacing
+    menuContainer.className = 'grid gap-4 md:grid-cols-2 lg:grid-cols-3';
 }
 
 // Add to cart logic
@@ -70,26 +72,53 @@ function removeFromCart(id) {
     updateCartUI();
 }
 
-// Update cart/basket UI
+// Update basket to order summary, add quantity controls, total calculation, and improved search bar
 function updateCartUI() {
     const basketItems = document.getElementById('basketItems');
     const basketCount = document.getElementById('basketCount');
     const checkoutBtn = document.getElementById('checkoutBtn');
-    if (!basketItems || !basketCount || !checkoutBtn) return;
-    basketItems.innerHTML = cart.length === 0 ? '<div class="text-gray-400 text-sm">No items in basket</div>' :
-        cart.map(item => `
-            <div class="flex justify-between items-center py-2 border-b group">
-                <span>${item.name} <span class="text-xs text-gray-500">(${item.quantity}x)</span></span>
-                <div class="flex items-center gap-2">
-                    <span class="text-amber-600 font-semibold">₹${item.price * item.quantity}</span>
-                    <button class="text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200" title="Remove" onclick="removeFromCart(${item.id})"><i class="fas fa-trash"></i></button>
+    const orderTotal = document.getElementById('orderTotal');
+    if (!basketItems || !basketCount || !checkoutBtn || !orderTotal) return;
+    if (cart.length === 0) {
+        basketItems.innerHTML = '<div class="text-gray-400 text-sm">No items in order</div>';
+        orderTotal.textContent = '₹0';
+    } else {
+        let total = 0;
+        basketItems.innerHTML = cart.map(item => {
+            total += item.price * item.quantity;
+            return `
+                <div class="flex justify-between items-center py-2 border-b group gap-2">
+                    <span class="font-medium">${item.name}</span>
+                    <div class="flex items-center gap-2">
+                        <button class="text-amber-600 border border-amber-300 rounded px-2 py-0.5 text-lg font-bold bg-amber-50 hover:bg-amber-100" onclick="window.changeQty(${item.id}, -1)">-</button>
+                        <span class="w-6 text-center">${item.quantity}</span>
+                        <button class="text-amber-600 border border-amber-300 rounded px-2 py-0.5 text-lg font-bold bg-amber-50 hover:bg-amber-100" onclick="window.changeQty(${item.id}, 1)">+</button>
+                        <span class="text-amber-600 font-semibold ml-2">₹${item.price * item.quantity}</span>
+                    </div>
                 </div>
-            </div>
-        `).join('');
+            `;
+        }).join('');
+        orderTotal.textContent = `₹${total}`;
+    }
     basketCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
     checkoutBtn.disabled = cart.length === 0;
     saveCart();
+    updateCheckoutBtnState();
 }
+
+// Quantity change logic
+window.changeQty = function(id, delta) {
+    id = Number(id);
+    const item = cart.find(i => i.id === id);
+    if (!item) return;
+    item.quantity += delta;
+    if (item.quantity <= 0) {
+        removeFromCart(id);
+    } else {
+        saveCart();
+        updateCartUI();
+    }
+};
 
 // Expose removeFromCart globally for inline onclick
 window.removeFromCart = removeFromCart;
@@ -97,10 +126,12 @@ window.removeFromCart = removeFromCart;
 // Expose addToCart globally for inline onclick
 window.addToCart = addToCart;
 
-// Search bar logic
+// Improved search bar clear button
 const searchInput = document.getElementById('searchInput');
-if (searchInput) {
+const clearSearch = document.getElementById('clearSearch');
+if (searchInput && clearSearch) {
     searchInput.addEventListener('input', function() {
+        clearSearch.classList.toggle('hidden', !this.value);
         const q = this.value.trim().toLowerCase();
         if (!q) {
             renderMenuItems(allMenuItems);
@@ -110,6 +141,12 @@ if (searchInput) {
                 (item.description && item.description.toLowerCase().includes(q))
             ));
         }
+    });
+    clearSearch.addEventListener('click', function() {
+        searchInput.value = '';
+        clearSearch.classList.add('hidden');
+        renderMenuItems(allMenuItems);
+        searchInput.focus();
     });
 }
 
@@ -126,79 +163,117 @@ function loadRazorpayScript() {
 }
 
 // Checkout button logic
-const checkoutBtn = document.getElementById('checkoutBtn');
-if (checkoutBtn) {
-    checkoutBtn.addEventListener('click', async function() {
-        if (cart.length === 0) return;
-        checkoutBtn.disabled = true;
-        checkoutBtn.textContent = 'Processing...';
-        await loadRazorpayScript();
-        const items = cart.map(item => ({ menu_id: item.id, quantity: item.quantity }));
-        try {
-            // 1. Create Razorpay order on backend
-            const orderRes = await fetch('../backend/payment.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ action: 'create_razorpay_order', items: JSON.stringify(items) })
-            });
-            const orderData = await orderRes.json();
-            if (orderData.error || !orderData.razorpay_order_id) {
-                showToast(orderData.error || 'Failed to initiate payment.', 'error');
-                checkoutBtn.disabled = false;
-                checkoutBtn.textContent = 'Checkout';
+document.addEventListener('DOMContentLoaded', function() {
+    // Helper: check if address is filled
+    function isAddressValid() {
+        const addressInput = document.getElementById('addressInput');
+        return addressInput && addressInput.value.trim().length > 0;
+    }
+
+    // Update checkout button state based on address
+    function updateCheckoutBtnState() {
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        checkoutBtn.disabled = cart.length === 0 || !isAddressValid();
+    }
+
+    // Listen for address input changes
+    const addressInput = document.getElementById('addressInput');
+    if (addressInput) {
+        addressInput.addEventListener('input', updateCheckoutBtnState);
+    }
+
+    // Patch updateCartUI to also check address
+    const _origUpdateCartUI = updateCartUI;
+    updateCartUI = function() {
+        _origUpdateCartUI();
+        updateCheckoutBtnState();
+    };
+
+    // Patch checkout logic to send address
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            if (cart.length === 0 || !isAddressValid()) {
+                showToast('Address is required.', 'error');
                 return;
             }
-            // 2. Open Razorpay Checkout
-            const options = {
-                key: orderData.razorpay_key_id, // Test key
-                amount: orderData.amount,
-                currency: 'INR',
-                name: 'TableTop',
-                description: 'Order Payment',
-                order_id: orderData.razorpay_order_id,
-                handler: async function (response) {
-                    // 3. On payment success, notify backend to place order and record payment
-                    try {
-                        const payRes = await fetch('../backend/payment.php', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: new URLSearchParams({
-                                action: 'verify_razorpay_payment',
-                                razorpay_payment_id: response.razorpay_payment_id,
-                                razorpay_order_id: response.razorpay_order_id,
-                                razorpay_signature: response.razorpay_signature,
-                                items: JSON.stringify(items)
-                            })
-                        });
-                        const payData = await payRes.json();
-                        if (payData.success) {
-                            showToast('Payment successful! Order placed.', 'success');
-                            cart = [];
-                            saveCart();
-                            updateCartUI();
-                        } else {
-                            let msg = payData.error || 'Payment verification failed.';
-                            if (msg.includes('Failed to place order after payment')) {
-                                msg += '\nIf this keeps happening, please contact support.';
+            checkoutBtn.disabled = true;
+            checkoutBtn.textContent = 'Processing...';
+            await loadRazorpayScript();
+            const items = cart.map(item => ({ menu_id: item.id, quantity: item.quantity }));
+            const address = addressInput.value.trim();
+            try {
+                // 1. Create Razorpay order on backend
+                const orderRes = await fetch('../backend/payment.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ action: 'create_razorpay_order', items: JSON.stringify(items), address })
+                });
+                const orderData = await orderRes.json();
+                if (orderData.error || !orderData.razorpay_order_id) {
+                    showToast(orderData.error || 'Failed to initiate payment.', 'error');
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.textContent = 'Checkout';
+                    return;
+                }
+                // 2. Open Razorpay Checkout
+                const options = {
+                    key: orderData.razorpay_key_id, // Test key
+                    amount: orderData.amount,
+                    currency: 'INR',
+                    name: 'TableTop',
+                    description: 'Order Payment',
+                    order_id: orderData.razorpay_order_id,
+                    handler: async function (response) {
+                        // 3. On payment success, notify backend to place order and record payment
+                        try {
+                            const payRes = await fetch('../backend/payment.php', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                body: new URLSearchParams({
+                                    action: 'verify_razorpay_payment',
+                                    razorpay_payment_id: response.razorpay_payment_id,
+                                    razorpay_order_id: response.razorpay_order_id,
+                                    razorpay_signature: response.razorpay_signature,
+                                    items: JSON.stringify(items),
+                                    address
+                                })
+                            });
+                            const payData = await payRes.json();
+                            if (payData.success) {
+                                showToast('Payment successful! Order placed.', 'success');
+                                cart = [];
+                                saveCart();
+                                updateCartUI();
+                                addressInput.value = '';
+                            } else {
+                                let msg = payData.error || 'Payment verification failed.';
+                                if (msg.includes('Failed to place order after payment')) {
+                                    msg += '\nIf this keeps happening, please contact support.';
+                                }
+                                showToast(msg, 'error');
                             }
-                            showToast(msg, 'error');
+                        } catch (err) {
+                            showToast('Payment verification error.', 'error');
                         }
-                    } catch (err) {
-                        showToast('Payment verification error.', 'error');
-                    }
-                },
-                prefill: {},
-                theme: { color: '#ffb300' }
-            };
-            const rzp = new window.Razorpay(options);
-            rzp.open();
-        } catch (error) {
-            showToast('Failed to initiate payment.', 'error');
-        }
-        checkoutBtn.disabled = false;
-        checkoutBtn.textContent = 'Checkout';
-    });
-}
+                    },
+                    prefill: {},
+                    theme: { color: '#ffb300' }
+                };
+                const rzp = new window.Razorpay(options);
+                rzp.open();
+            } catch (error) {
+                showToast('Failed to initiate payment.', 'error');
+            }
+            checkoutBtn.disabled = false;
+            checkoutBtn.textContent = 'Checkout';
+        });
+    }
+
+    // Initial state
+    updateCheckoutBtnState();
+});
 
 // Cart persistence
 function saveCart() {
@@ -213,6 +288,58 @@ function loadCart() {
 function showToast(msg, type = 'info') {
     alert(msg);
 }
+
+// Inline feedback system for payment initiation
+function initiatePayment(paymentData) {
+    const feedbackElement = document.getElementById('feedbackMessage');
+    feedbackElement.textContent = 'Initiating payment...';
+    feedbackElement.className = 'text-blue-600';
+
+    fetch('/backend/payment.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(paymentData)
+    })
+        .then(res => res.json())
+        .then(response => {
+            if (response.success) {
+                feedbackElement.textContent = 'Payment successful! Order placed.';
+                feedbackElement.className = 'text-green-600';
+            } else {
+                feedbackElement.textContent = response.error || 'Failed to initiate payment';
+                feedbackElement.className = 'text-red-600';
+            }
+        })
+        .catch(() => {
+            feedbackElement.textContent = 'Failed to initiate payment.';
+            feedbackElement.className = 'text-red-600';
+        });
+}
+
+// Helper: check if address is filled
+function isAddressValid() {
+    const addressInput = document.getElementById('addressInput');
+    return addressInput && addressInput.value.trim().length > 0;
+}
+
+// Update checkout button state based on address
+function updateCheckoutBtnState() {
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    checkoutBtn.disabled = cart.length === 0 || !isAddressValid();
+}
+
+// Listen for address input changes
+const addressInput = document.getElementById('addressInput');
+if (addressInput) {
+    addressInput.addEventListener('input', updateCheckoutBtnState);
+}
+
+// Patch updateCartUI to also check address
+const _origUpdateCartUI = updateCartUI;
+updateCartUI = function() {
+    _origUpdateCartUI();
+    updateCheckoutBtnState();
+};
 
 // On load
 loadCart();

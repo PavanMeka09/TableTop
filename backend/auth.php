@@ -1,8 +1,13 @@
 <?php
 session_start();
 require_once 'config.php';
+require_once __DIR__ . '/../vendor/autoload.php'; // PHPMailer
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 header('Content-Type: application/json');
+
+// Removed redirect to login.html for non-logged-in users
 
 // CSRF token generation and validation
 // function generate_csrf_token() {
@@ -42,13 +47,24 @@ if ($method === 'POST') {
         $otp = rand(1000, 9999);
         $_SESSION['otp'] = $otp;
         $_SESSION['otp_email'] = $email;
-        // Send OTP to email
-        $subject = 'Your TableTop OTP Code';
-        $message = "Your OTP code is: $otp";
-        $headers = 'From: noreply@tabletop.com' . "\r\n";
-        if (mail($email, $subject, $message, $headers)) {
+        // Send OTP to email using PHPMailer
+        $mail = new PHPMailer(true);
+        try {
+            $mail->isSMTP();
+            $mail->Host = 'smtp.gmail.com';
+            $mail->SMTPAuth = true;
+            $mail->Username = 'tabletoplpu@gmail.com'; // TODO: Replace with your Gmail address
+            $mail->Password = 'bitm hgxp lhiz aybw'; // TODO: Replace with your Gmail App Password
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Port = 587;
+            $mail->setFrom('tabletoplpu@gmail.com', 'TableTop');
+            $mail->addAddress($email);
+            $mail->Subject = 'TableTop OTP';
+            $mail->Body = "Your OTP is: $otp";
+            $mail->send();
             echo json_encode(['success' => 'OTP sent to your email.']);
-        } else {
+        } catch (Exception $e) {
+            log_error('PHPMailer error (OTP): ' . $mail->ErrorInfo);
             echo json_encode(['error' => 'Failed to send OTP.']);
         }
         exit;
@@ -143,11 +159,26 @@ if ($method === 'POST') {
             $stmt = $pdo->prepare("INSERT INTO password_resets (user_id, token, expires_at) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE token=?, expires_at=?");
             $stmt->execute([$user_id, $token, $expires, $token, $expires]);
             $reset_link = 'https://' . $_SERVER['HTTP_HOST'] . '/pages/login.html?reset_token=' . $token;
-            $subject = 'TableTop Password Reset';
-            $message = "Click the link to reset your password: $reset_link\nThis link expires in 1 hour.";
-            $headers = 'From: noreply@tabletop.com' . "\r\n";
-            mail($email, $subject, $message, $headers);
-            echo json_encode(['success' => 'Password reset link sent if email exists.']);
+            // Send reset link using PHPMailer
+            $mail = new PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host = 'smtp.gmail.com';
+                $mail->SMTPAuth = true;
+                $mail->Username = 'tabletoplpu@gmail.com'; // TODO: Replace with your Gmail address
+                $mail->Password = 'bitm hgxp lhiz aybw'; // TODO: Replace with your Gmail App Password
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port = 587;
+                $mail->setFrom('tabletoplpu@gmail.com', 'TableTop');
+                $mail->addAddress($email);
+                $mail->Subject = 'TableTop Password Reset';
+                $mail->Body = "Click the link to reset your password: $reset_link\nThis link expires in 1 hour.";
+                $mail->send();
+                echo json_encode(['success' => 'Password reset link sent if email exists.']);
+            } catch (Exception $e) {
+                log_error('PHPMailer error (reset): ' . $mail->ErrorInfo);
+                echo json_encode(['error' => 'Failed to send reset link.']);
+            }
         } catch (PDOException $e) {
             log_error($e->getMessage());
             echo json_encode(['error' => 'Failed to send reset link.']);

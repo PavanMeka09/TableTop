@@ -93,13 +93,17 @@ if ($method === 'POST') {
         $date = $_POST['date'] ?? null;
         $status = $_POST['status'] ?? null;
 
+        // Debugging: Log session and query parameters
+        log_error("Session: " . json_encode($_SESSION));
+        log_error("Query Parameters: Date=" . $date . ", Status=" . $status);
+
         try {
             if ($role === 'admin') {
                 // Admin: get all reservations, optionally filter by date and status
                 $query = "SELECT r.*, u.name as customer_name, u.email as customer_email FROM reservations r JOIN users u ON r.user_id = u.id WHERE 1=1";
                 $params = [];
                 if ($date && strtolower($date) !== 'all') {
-                    $query .= " AND DATE(r.reservation_time) = ?";
+                    $query .= " AND DATE(r.reservation_time) >= ?"; // Changed to include today and future dates
                     $params[] = $date;
                 }
                 if ($status && $status !== 'all') {
@@ -107,6 +111,7 @@ if ($method === 'POST') {
                     $params[] = $status;
                 }
                 $query .= " ORDER BY r.reservation_time DESC";
+                log_error("SQL Query: " . $query . " | Params: " . json_encode($params));
                 $stmt = $pdo->prepare($query);
                 $stmt->execute($params);
                 $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -123,13 +128,47 @@ if ($method === 'POST') {
                     $params[] = $status;
                 }
                 $query .= " ORDER BY reservation_time DESC";
+                log_error("SQL Query: " . $query . " | Params: " . json_encode($params));
                 $stmt = $pdo->prepare($query);
                 $stmt->execute($params);
                 $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
             echo json_encode($reservations);
         } catch (PDOException $e) {
+            log_error("Database Error: " . $e->getMessage());
             echo json_encode(['error' => 'Failed to get reservations.']);
+        }
+    } elseif ($action === 'get_booked_times') {
+        // Get all booked time slots for a given date (returns array of times in 'HH:MM:SS' format)
+        $date = $_POST['date'] ?? null;
+        if (!$date) {
+            echo json_encode(['error' => 'Date is required.']);
+            exit;
+        }
+        try {
+            $stmt = $pdo->prepare("SELECT DISTINCT TIME(reservation_time) as time FROM reservations WHERE DATE(reservation_time) = ? AND status != 'cancelled'");
+            $stmt->execute([$date]);
+            $times = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            echo json_encode(['booked_times' => $times]);
+        } catch (PDOException $e) {
+            echo json_encode(['error' => 'Failed to fetch booked times.']);
+        }
+    } elseif ($action === 'get_booked_tables') {
+        // Get all booked tables for a given date and time (returns array of table numbers)
+        $date = $_POST['date'] ?? null;
+        $time = $_POST['time'] ?? null;
+        if (!$date || !$time) {
+            echo json_encode(['error' => 'Date and time are required.']);
+            exit;
+        }
+        $datetime = $date . ' ' . $time . ':00';
+        try {
+            $stmt = $pdo->prepare("SELECT table_number FROM reservations WHERE reservation_time = ? AND status != 'cancelled'");
+            $stmt->execute([$datetime]);
+            $tables = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            echo json_encode(['booked_tables' => $tables]);
+        } catch (PDOException $e) {
+            echo json_encode(['error' => 'Failed to fetch booked tables.']);
         }
     } else {
         echo json_encode(['error' => 'Invalid action.']);
