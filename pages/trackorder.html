@@ -6,6 +6,7 @@
     <title>TableTop | Track Order</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../assets/js/checkSession.js"></script>
 </head>
 <body class="bg-gray-50">
     <nav class="bg-white shadow-md sticky top-0 z-40 mb-8">
@@ -22,7 +23,6 @@
                     <a href="trackorder.html" class="hover:text-amber-600 transition-colors flex items-center gap-1 cursor-pointer"><i class="fas fa-truck"></i> Track Order</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md login-btn cursor-pointer">Login</a>
                     <button id="mobile-menu-button" class="md:hidden text-gray-700 cursor-pointer"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
             </div>
@@ -210,45 +210,6 @@
             }
         }
         document.addEventListener('DOMContentLoaded', fetchOrders);
-    </script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const loginButton = document.querySelector('.login-btn');
-            const nav = document.querySelector('nav .flex.items-center.space-x-4');
-            let logoutBtn = nav.querySelector('.logout-btn');
-            let loginBtn = nav.querySelector('a.login-btn');
-            if (logoutBtn) logoutBtn.remove();
-            try {
-                const res = await fetch('../backend/auth.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ action: 'check_session' })
-                });
-                const data = await res.json();
-                if (data.logged_in) {
-                    if (loginBtn) loginBtn.style.display = 'none';
-                    const logout = document.createElement('a');
-                    logout.textContent = 'Logout';
-                    logout.href = '#';
-                    logout.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md logout-btn';
-                    logout.onclick = async function(e) {
-                        e.preventDefault();
-                        await fetch('../backend/auth.php', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: new URLSearchParams({ action: 'logout' })
-                        });
-                        window.location.href = '../index.html';
-                    };
-                    nav.appendChild(logout);
-                } else {
-                    window.location.href = 'login.html';
-                }
-            } catch (e) {
-                window.location.href = 'login.html';
-            }
-        });
     </script>
 </body>
 </html>

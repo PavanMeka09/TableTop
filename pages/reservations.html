@@ -6,6 +6,7 @@
     <title>TableTop | Reservations</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../assets/js/checkSession.js"></script>
     <style>
         /* Custom styles for hover effects and responsive design */
         .interactive-element {
@@ -52,7 +53,6 @@
                     <a href="trackorder.html" class="hover:text-amber-600 transition-colors flex items-center gap-1 interactive-element"><i class="fas fa-truck"></i> Track Order</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md login-btn interactive-element">Login</a>
                     <button id="mobile-menu-button" class="md:hidden text-gray-700 interactive-element"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
             </div>
@@ -310,48 +310,12 @@
             fetchBookedTimes();
         }
         
-        // Session check and UI update
-        async function checkSessionAndUpdateUI() {
-            const loginButton = document.querySelector('.login-btn');
-            const nav = document.querySelector('nav .flex.items-center.space-x-4');
-            
-            try {
-                const res = await fetch('../backend/auth.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ action: 'check_session' })
-                });
-                const data = await res.json();
-                
-                if (data.logged_in) {
-                    loginButton.style.display = 'none';
-                    const logout = document.createElement('a');
-                    logout.textContent = 'Logout';
-                    logout.href = '#';
-                    logout.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md logout-btn interactive-element';
-                    logout.onclick = async function(e) {
-                        e.preventDefault();
-                        await fetch('../backend/auth.php', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: new URLSearchParams({ action: 'logout' })
-                        });
-                        window.location.href = '../index.html';
-                    };
-                    nav.appendChild(logout);
-                }
-            } catch (e) {
-                console.error('Error checking session:', e);
-            }
-        }
-        
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('reservationDate').min = today;
             document.getElementById('reservationDate').value = today;
             
-            checkSessionAndUpdateUI();
             renderTimeSlots();
             fetchBookedTimes();
             

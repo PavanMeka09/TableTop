@@ -7,12 +7,9 @@
     <link rel="icon" type="image/png" href="../assets/images/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../assets/js/checkSession.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
-    <!-- Back Button -->
-    <a href="../index.html" class="fixed top-6 left-6 text-amber-600 hover:text-amber-700 transition-colors z-50">
-        <i class="fas fa-arrow-left text-2xl"></i>
-    </a>
     <nav class="bg-white shadow-md sticky top-0 z-40 mb-8">
         <div class="container mx-auto px-8">
             <div class="flex justify-between items-center py-4">
@@ -20,35 +17,45 @@
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
                     <h1 class="text-2xl font-bold text-amber-600">TableTop</h1>
                 </a>
-                <div class="hidden md:flex items-center space-x-8 text-lg font-medium">
+                <div class="hidden md:flex items-center space-x-20 text-lg font-medium">
                     <a href="../index.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-home"></i> Home</a>
-                    <a href="menu.html" class="text-amber-600 font-semibold border-b-2 border-amber-600">Menu</a>
-                    <a href="reservations.html" class="hover:text-amber-600 transition-colors">Reservations</a>
+                    <a href="menu.html" class="text-amber-600 font-semibold border-amber-600 flex items-center gap-1"><i class="fa-solid fa-list"></i>Menu</a>
+                    <a href="reservations.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-calendar"></i>Reservations</a>
                     <a href="trackorder.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-truck"></i> Track Order</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <a href="login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md login-btn">Login</a>
-                    <button id="mobile-menu-button" class="md:hidden text-gray-700"><i class="fas fa-bars text-2xl"></i></button>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-700 cursor-pointer"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
             </div>
-            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100 px-8">
-                <a href="../index.html" class="block py-2 text-gray-700 hover:text-amber-600 flex items-center gap-1"><i class="fas fa-home"></i> Home</a>
-                <a href="menu.html" class="block py-2 text-amber-600 font-semibold border-b-2 border-amber-600">Menu</a>
-                <a href="reservations.html" class="block py-2 text-gray-700 hover:text-amber-600">Reservations</a>
-                <a href="trackorder.html" class="block py-2 text-gray-700 hover:text-amber-600 flex items-center gap-1"><i class="fas fa-truck"></i> Track Order</a>
+            <div id="mobile-menu" class="md:hidden hidden py-4 px-8 space-y-6 border-t-2 border-gray-200">
+                <a href="../index.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-home"></i> Home</a>
+                <a href="menu.html" class="text-amber-600 font-semibold border-amber-600 flex items-center gap-1"><i class="fa-solid fa-list"></i>Menu</a>
+                <a href="reservations.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-calendar"></i>Reservations</a>
+                <a href="trackorder.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-truck"></i> Track Order</a>
             </div>
         </div>
     </nav>
     <main class="container mx-auto px-4 md:px-16 py-8 relative">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-            <div class="w-full md:w-2/3">
-                <div class="relative">
-                    <input type="text" id="searchInput" placeholder="Search dishes..." class="w-full p-4 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-amber-500 focus:outline-none shadow text-lg bg-white placeholder-gray-400 pr-12 transition-all duration-200">
-                    <button id="clearSearch" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-amber-600 text-xl hidden" title="Clear"><i class="fas fa-times-circle"></i></button>
-                </div>
+        <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
+           <div class="w-full md:w-2/3">
+              <div class="relative">
+                <input 
+                  type="text" 
+                  id="searchInput" 
+                  placeholder="Search dishes..." 
+                  class="w-full p-4 pr-12 rounded-2xl border border-gray-300 bg-white text-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm transition duration-200"
+                />
+                <button 
+                  id="clearSearch" 
+                  class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-amber-600 text-xl hidden" 
+                  title="Clear"
+                >
+                  <i class="fas fa-times-circle"></i>
+                </button>
+              </div>
             </div>
-        </div>
-        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 pb-64" id="menuItems"></div>
+          </div>          
+        <div class="" id="menuItems"></div>
         <div class="fixed bottom-4 right-4 bg-white p-6 rounded-2xl shadow-2xl w-96 max-w-full border border-gray-100 z-50" id="orderSummary">
             <h3 class="text-lg mb-2 font-semibold flex items-center"><i class="fas fa-receipt text-amber-600 mr-2"></i>Order Summary (<span id="basketCount">0</span>)</h3>
             <div id="basketItems" class="max-h-56 overflow-y-auto mb-4"></div>
@@ -70,43 +77,6 @@
             const mobileMenu = document.getElementById('mobile-menu');
             mobileMenu.classList.toggle('hidden');
         });
-        // Session check and UI update
-        async function checkSessionAndUpdateUI() {
-            const nav = document.querySelector('nav .flex.items-center.space-x-4');
-            let loginBtn = nav.querySelector('a.login-btn');
-            let logoutBtn = nav.querySelector('.logout-btn');
-            if (logoutBtn) logoutBtn.remove();
-            try {
-                const res = await fetch('../backend/auth.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ action: 'check_session' })
-                });
-                const data = await res.json();
-                if (data.logged_in) {
-                    if (loginBtn) loginBtn.style.display = 'none';
-                    const logout = document.createElement('a');
-                    logout.textContent = 'Logout';
-                    logout.href = '#';
-                    logout.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md logout-btn';
-                    logout.onclick = async function(e) {
-                        e.preventDefault(); 
-                        await fetch('../backend/auth.php', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: new URLSearchParams({ action: 'logout' })
-                        });
-                        window.location.href = '../index.html';
-                    };
-                    nav.appendChild(logout);
-                } else {
-                    window.location.href = 'login.html';
-                }
-            } catch (e) {
-                window.location.href = 'login.html';
-            }
-        }
-        document.addEventListener('DOMContentLoaded', checkSessionAndUpdateUI);
 
         function renderMenuItems(items) {
             const container = document.getElementById('menuItems');
@@ -119,7 +89,7 @@
                 const div = document.createElement('div');
                 div.className = 'bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col';
                 div.innerHTML = `
-                    <img src="${item.image_url || '../assets/images/placeholder.png'}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-4 bg-gray-100">
+                    <img src="${item.image_url}" alt="${item.name}" class="w-full h-48 object-cover rounded mb-4 bg-gray-100">
                     <h3 class="text-xl font-bold text-gray-900 mb-2">${item.name}</h3>
                     <p class="text-gray-600 text-sm mb-4">${item.description}</p>
                     <p class="text-2xl font-bold text-amber-600 mb-4">₹${item.price}</p>

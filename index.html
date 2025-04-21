@@ -248,13 +248,12 @@
     </section>
 
     <footer class="bg-gray-900 text-white p-6">
-        <div class="border-t border-gray-800 text-center text-gray-400">
+        <div class="border-gray-800 text-center text-gray-400">
             <p>&copy; 2025 TableTop. All rights reserved.</p>
         </div>
     </footer>
     
     <script>
-        // Logout handler function
         function handleLogout(e) {
             e.preventDefault();
             fetch('backend/auth.php', {
@@ -271,7 +270,6 @@
             .catch(error => console.error('Logout error:', error));
         }
 
-        // Check if user is logged in and update the UI
         function updateAuthUI() {
             const nav = document.querySelector('nav .flex.items-center.space-x-4');
             const loginBtn = nav.querySelector('.login-btn');

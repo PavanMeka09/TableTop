@@ -47,7 +47,7 @@ function renderMenuItems(items) {
         menuContainer.appendChild(menuItem);
     });
     // Adjust grid gap for better spacing
-    menuContainer.className = 'grid gap-4 md:grid-cols-2 lg:grid-cols-3';
+    menuContainer.className = 'flex flex-wrap gap-10';
 }
 
 // Add to cart logic
