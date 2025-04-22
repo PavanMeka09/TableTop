@@ -7,137 +7,137 @@
     <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="../../js/checkSessionAdmin.js"></script>
 </head>
 <body class="bg-gray-50">
-    <nav class="bg-white shadow-md sticky top-0 z-50">
+    <nav class="bg-white shadow-md sticky top-0 z-40 mb-8">
         <div class="container mx-auto px-8">
             <div class="flex justify-between items-center py-4">
                 <a href="dashboard.html" class="flex items-center space-x-2">
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
                     <h1 class="text-2xl font-bold text-amber-600">TableTop Admin</h1>
                 </a>
-                <div class="hidden md:flex items-center space-x-8 text-lg font-medium">
-                    <a href="dashboard.html" class="hover:text-amber-600 transition-colors">Dashboard</a>
-                    <a href="menu.html" class="hover:text-amber-600 transition-colors">Menu</a>
-                    <a href="orders.html" class="hover:text-amber-600 transition-colors">Orders</a>
-                    <a href="reservations.html" class="hover:text-amber-600 transition-colors">Reservations</a>
-                    <a href="feedback.html" class="hover:text-amber-600 transition-colors">Feedback</a>
-                </div>
                 <div class="flex items-center space-x-4">
-                    <a href="../../pages/login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md login-btn">Login</a>
-                    <button id="mobile-menu-button" class="md:hidden text-gray-700"><i class="fas fa-bars text-2xl"></i></button>
+                    <button class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 mx-4 cursor-pointer rounded-lg transition-colors shadow-md logout-btn">Logout</button>
                 </div>
             </div>
-            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100 px-8">
-                <a href="dashboard.html" class="block py-2 text-amber-600 font-semibold border-b-2 border-amber-600">Dashboard</a>
-                <a href="menu.html" class="block py-2 hover:text-amber-600">Menu</a>
-                <a href="orders.html" class="block py-2 hover:text-amber-600">Orders</a>
-                <a href="reservations.html" class="block py-2 hover:text-amber-600">Reservations</a>
-                <a href="feedback.html" class="block py-2 hover:text-amber-600">Feedback</a>
-            </div>
+
         </div>
     </nav>
+    
+    <div class="container mx-auto px-4 py-12">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+                <a href="menu.html" class="admin-card bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                    <div class="text-center">
+                        <div class="bg-amber-100 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-utensils text-3xl text-amber-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900">Menu</h3>
+                        <p class="text-gray-600">Add, edit or remove items from the menu</p>
+                    </div>
+                </a>
+                
+                <a href="reservations.html" class="admin-card bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                    <div class="text-center">
+                        <div class="bg-amber-100 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
+                            <i class="fa-solid fa-calendar text-3xl text-amber-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900">Reservations</h3>
+                        <p class="text-gray-600">Manage Table Reservations</p>
+                    </div>
+                </a>
+                
+                <a href="orders.html" class="admin-card bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                    <div class="text-center">
+                        <div class="bg-amber-100 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-clipboard-list text-3xl text-amber-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900">Track Orders</h3>
+                        <p class="text-gray-600">View and manage customer orders</p>
+                    </div>
+                </a>
 
-    <main class="container mx-auto p-6">
-        <div class="bg-white rounded-lg shadow-sm p-6">
-            <h3 class="text-xl font-bold mb-6">Quick Overview</h3>
-            <div class="grid gap-6 md:grid-cols-3">
-                <div class="bg-amber-50 p-6 rounded-lg">
-                    <div class="flex items-center justify-between mb-2">
-                        <p class="text-gray-600">Pending Orders</p>
-                        <i class="fas fa-clock text-amber-600"></i>
+                <!-- Customer Feedback Card -->
+                <a href="feedback.html" class="admin-card bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+                    <div class="text-center">
+                        <div class="bg-amber-100 w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6">
+                            <i class="fas fa-comment-alt text-3xl text-amber-600"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold mb-2 text-gray-900">Customer Feedback</h3>
+                        <p class="text-gray-600">Read and respond to customer reviews</p>
                     </div>
-                    <p class="pending-orders text-3xl font-bold text-gray-900">-</p>
-                </div>
-                
-                <div class="bg-amber-50 p-6 rounded-lg">
-                    <div class="flex items-center justify-between mb-2">
-                        <p class="text-gray-600">New Feedback</p>
-                        <i class="fas fa-comment text-amber-600"></i>
+                </a>
+
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="quick-stats bg-white rounded-xl shadow-md p-8">
+                <h3 class="text-2xl font-bold mb-6 text-gray-900">Quick Overview</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-amber-50 p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600">Pending Orders</p>
+                                <p class="pending-orders text-3xl font-bold text-gray-900">12</p>
+                            </div>
+                            <i class="fas fa-clock text-3xl text-amber-600"></i>
+                        </div>
                     </div>
-                    <p class="new-feedback text-3xl font-bold text-gray-900">-</p>
-                </div>
-                
-                <div class="bg-amber-50 p-6 rounded-lg">
-                    <div class="flex items-center justify-between mb-2">
-                        <p class="text-gray-600">Menu Items</p>
-                        <i class="fas fa-utensils text-amber-600"></i>
+                    <div class="bg-amber-50 p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600">New Feedback</p>
+                                <p class="new-feedback text-3xl font-bold text-gray-900">5</p>
+                            </div>
+                            <i class="fas fa-comment-dots text-3xl text-amber-600"></i>
+                        </div>
                     </div>
-                    <p class="menu-items text-3xl font-bold text-gray-900">-</p>
+                    <div class="bg-amber-50 p-6 rounded-xl">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-gray-600">Menu Items</p>
+                                <p class="menu-items text-3xl font-bold text-gray-900">42</p>
+                            </div>
+                            <i class="fas fa-pizza-slice text-3xl text-amber-600"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+    
     <script>
-        document.getElementById('mobile-menu-button').addEventListener('click', function() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('hidden');
-        });
-        // Session check and UI update
-        async function checkSessionAndUpdateUI() {
-            const nav = document.querySelector('nav .flex.items-center.space-x-4');
-            let loginBtn = nav.querySelector('a.login-btn');
-            let logoutBtn = nav.querySelector('.logout-btn');
-            if (logoutBtn) logoutBtn.remove();
-            try {
-                const res = await fetch('../../backend/auth.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ action: 'check_session' })
+            async function loadStatsAndChart() {
+                const pending = document.querySelector('.pending-orders');
+                const feedback = document.querySelector('.new-feedback');
+                const menu = document.querySelector('.menu-items');
+                pending.textContent = feedback.textContent = menu.textContent = '...';
+                try {
+                    const res = await fetch('../../backend/admin.php?action=get_quick_stats');
+                    const data = await res.json();
+                    if (!data.error && data.data) {
+                        pending.textContent = data.data.pending_orders;
+                        feedback.textContent = data.data.new_feedback;
+                        menu.textContent = data.data.menu_items;
+                    } else {
+                        alert('Failed to load stats');
+                    }
+                } catch (e) {
+                    alert('Failed to load stats');
+                }
+            }
+            document.addEventListener('DOMContentLoaded', loadStatsAndChart);
+            Array.from(document.getElementsByClassName('logout-btn')).forEach(function(logoutBtn) {
+                logoutBtn.addEventListener('click', async function() {
+                    await fetch('../../backend/auth.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: new URLSearchParams({ action: 'logout' })
+                    });
+                    window.location.href = '../../index.html';
                 });
-                const data = await res.json();
-                if (data.logged_in && data.role === 'admin') {
-                    if (loginBtn) loginBtn.style.display = 'none';
-                    const logout = document.createElement('a');
-                    logout.textContent = 'Logout';
-                    logout.href = '#';
-                    logout.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md logout-btn';
-                    logout.onclick = async function(e) {
-                        e.preventDefault();
-                        await fetch('../../backend/auth.php', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                            body: new URLSearchParams({ action: 'logout' })
-                        });
-                        window.location.href = '../../index.html';
-                    };
-                    nav.appendChild(logout);
-                } else {
-                    if (loginBtn) loginBtn.style.display = '';
-                    window.location.href = '../../pages/login.html';
-                }
-            } catch (e) {
-                if (loginBtn) loginBtn.style.display = '';
-                window.location.href = '../../pages/login.html';
-            }
-        }
-        document.addEventListener('DOMContentLoaded', checkSessionAndUpdateUI);
-        // Toast feedback
-        function showToast(msg, type = 'info') {
-            alert(msg);
-        }
-        // Quick stats and chart
-        async function loadStatsAndChart() {
-            const pending = document.querySelector('.pending-orders');
-            const feedback = document.querySelector('.new-feedback');
-            const menu = document.querySelector('.menu-items');
-            pending.textContent = feedback.textContent = menu.textContent = '...';
-            try {
-                const res = await fetch('../../backend/admin.php?action=get_quick_stats');
-                const data = await res.json();
-                if (!data.error && data.data) {
-                    pending.textContent = data.data.pending_orders;
-                    feedback.textContent = data.data.new_feedback;
-                    menu.textContent = data.data.menu_items;
-                    // Removed chart/graph rendering
-                } else {
-                    showToast('Failed to load stats', 'error');
-                }
-            } catch (e) {
-                showToast('Failed to load stats', 'error');
-            }
-        }
-        document.addEventListener('DOMContentLoaded', loadStatsAndChart);
+            });
     </script>
 </body>
 </html>

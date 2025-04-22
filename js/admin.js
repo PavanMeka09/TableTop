@@ -1,9 +1,12 @@
 // Admin-specific functionality
 
-// Fetch all orders
 async function fetchAllOrders() {
     try {
-        const response = await fetch('../backend/admin.php?action=get_all_orders');
+        const response = await fetch('backend/admin.php', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ action: 'get_all_orders' })
+        })
         const data = await response.json();
         if (data.error) {
             alert(data.error);
@@ -32,10 +35,13 @@ function renderOrders(orders) {
     });
 }
 
-// Fetch all reservations
 async function fetchAllReservations() {
     try {
-        const response = await fetch('../backend/admin.php?action=get_all_reservations');
+        const response = await fetch('backend/admin.php', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ action: 'get_all_reservations' })
+        })
         const data = await response.json();
         if (data.error) {
             alert(data.error);
@@ -64,10 +70,13 @@ function renderReservations(reservations) {
     });
 }
 
-// Fetch all feedback
 async function fetchAllFeedback() {
     try {
-        const response = await fetch('../backend/feedback.php?action=get_feedback'); // Corrected endpoint
+        const response = await fetch('../backend/feedback.php', {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ action: 'get_feedback' })
+        })
         const data = await response.json();
         if (data.error) {
             alert(data.error);
@@ -79,7 +88,6 @@ async function fetchAllFeedback() {
     }
 }
 
-// Render feedback
 function renderFeedback(feedback) {
     const feedbackContainer = document.getElementById('feedbackContainer');
     feedbackContainer.innerHTML = '';
@@ -97,7 +105,6 @@ function renderFeedback(feedback) {
     });
 }
 
-// Example usage
 fetchAllOrders();
 fetchAllReservations();
 fetchAllFeedback();

@@ -6,31 +6,31 @@
     <title>TableTop | Track Order</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="../assets/js/checkSession.js"></script>
+    <script src="../js/checkSessionUser.js"></script>
 </head>
 <body class="bg-gray-50">
     <nav class="bg-white shadow-md sticky top-0 z-40 mb-8">
         <div class="container mx-auto px-8">
             <div class="flex justify-between items-center py-4">
-                <a href="../index.html" class="flex items-center space-x-2 cursor-pointer">
+                <a href="../index.html" class="flex items-center space-x-2">
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
                     <h1 class="text-2xl font-bold text-amber-600">TableTop</h1>
                 </a>
-                <div class="hidden md:flex items-center space-x-8 text-lg font-medium">
-                    <a href="../index.html" class="hover:text-amber-600 transition-colors flex items-center gap-1 cursor-pointer"><i class="fas fa-home"></i> Home</a>
-                    <a href="menu.html" class="hover:text-amber-600 transition-colors cursor-pointer">Menu</a>
-                    <a href="reservations.html" class="hover:text-amber-600 transition-colors cursor-pointer">Reservations</a>
-                    <a href="trackorder.html" class="hover:text-amber-600 transition-colors flex items-center gap-1 cursor-pointer"><i class="fas fa-truck"></i> Track Order</a>
+                <div class="hidden md:flex items-center space-x-14 text-lg font-medium ml-auto">
+                    <a href="../index.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-home"></i> Home</a>
+                    <a href="menu.html" class="hover:text-amber-600 font-semibold border-amber-600 flex items-center gap-1"><i class="fa-solid fa-list"></i>Menu</a>
+                    <a href="reservations.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-calendar"></i>Reservations</a>
+                    <a href="trackorder.html" class="text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-truck"></i> Track Order</a>
                 </div>
                 <div class="flex items-center space-x-4">
                     <button id="mobile-menu-button" class="md:hidden text-gray-700 cursor-pointer"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
             </div>
-            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100 px-8">
-                <a href="../index.html" class="block py-2 text-gray-700 hover:text-amber-600 flex items-center gap-1 cursor-pointer"><i class="fas fa-home"></i> Home</a>
-                <a href="menu.html" class="block py-2 text-gray-700 hover:text-amber-600 cursor-pointer">Menu</a>
-                <a href="reservations.html" class="block py-2 text-gray-700 hover:text-amber-600 cursor-pointer">Reservations</a>
-                <a href="trackorder.html" class="block py-2 text-gray-700 hover:text-amber-600 flex items-center gap-1 cursor-pointer"><i class="fas fa-truck"></i> Track Order</a>
+            <div id="mobile-menu" class="md:hidden hidden py-4 px-8 space-y-6 border-t-2 border-gray-200">
+                <a href="../index.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-home"></i> Home</a>
+                <a href="menu.html" class="hover:text-amber-600 font-semibold border-amber-600 flex items-center gap-1"><i class="fa-solid fa-list"></i>Menu</a>
+                <a href="reservations.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-calendar"></i>Reservations</a>
+                <a href="trackorder.html" class="text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-truck"></i> Track Order</a>
             </div>
         </div>
     </nav>
@@ -80,11 +80,11 @@
                                         <i class="fas fa-star text-gray-400 cursor-pointer text-2xl" data-value="${star}" onclick="selectStar(${order.id}, ${star})"></i>
                                     `).join('')}
                                 </div>
-                                <input type="hidden" id="rating-${order.id}" name="rating">
+                                <input type="hidden" id="rating-${order.id}" name="rating" autocomplete="off">
                             </div>
                             <div class="mb-4">
                                 <label for="message-${order.id}" class="block text-sm font-medium mb-1">Message (optional)</label>
-                                <textarea id="message-${order.id}" name="message" rows="3" class="w-full border rounded p-2 focus:ring-amber-500 focus:border-amber-500"></textarea>
+                                <textarea id="message-${order.id}" name="message" rows="3" class="w-full border rounded p-2 focus:ring-amber-500 focus:border-amber-500" autocomplete="off"></textarea>
                             </div>
                             <button type="submit" class="px-4 py-2 bg-amber-600 text-white rounded hover:bg-amber-700 cursor-pointer">Submit Feedback</button>
                         </form>

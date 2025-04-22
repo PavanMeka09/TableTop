@@ -21,24 +21,25 @@ if ($method === 'POST') {
 
         $user_id = $_SESSION['user_id'];
         $table_number = intval($_POST['table_number'] ?? 0);
-        $reservation_time = $_POST['reservation_time'] ?? '';
+        $reservation_start = $_POST['reservation_start'] ?? '';
+        $reservation_end = $_POST['reservation_end'] ?? '';
 
-        if (!$table_number || empty($reservation_time)) {
-            echo json_encode(['error' => 'Table number and reservation time are required.']);
+        if (!$table_number || empty($reservation_start) || empty($reservation_end)) {
+            echo json_encode(['error' => 'Table number, reservation start, and reservation end are required.']);
             exit;
         }
 
-        // Real-time check for overlapping reservation
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE table_number = ? AND reservation_time = ? AND status != 'cancelled'");
-        $stmt->execute([$table_number, $reservation_time]);
+        // Check for overlapping reservation for the same table
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE table_number = ? AND status != 'cancelled' AND ((reservation_time < ? AND DATE_ADD(reservation_time, INTERVAL 1 HOUR) > ?) OR (reservation_time >= ? AND reservation_time < ?))");
+        $stmt->execute([$table_number, $reservation_end, $reservation_start, $reservation_start, $reservation_end]);
         if ($stmt->fetchColumn() > 0) {
-            echo json_encode(['error' => 'Table already booked for this time.']);
+            echo json_encode(['error' => 'Table already booked for this time slot.']);
             exit;
         }
 
         try {
-            $stmt = $pdo->prepare("INSERT INTO reservations (user_id, table_number, reservation_time) VALUES (?, ?, ?)");
-            $stmt->execute([$user_id, $table_number, $reservation_time]);
+            $stmt = $pdo->prepare("INSERT INTO reservations (user_id, table_number, reservation_time, reservation_end_time) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$user_id, $table_number, $reservation_start, $reservation_end]);
             echo json_encode(['success' => 'Reservation created successfully.']);
         } catch (PDOException $e) {
             log_error($e->getMessage());
@@ -83,8 +84,8 @@ if ($method === 'POST') {
         $status = $_POST['status'] ?? null;
 
         // Debugging: Log session and query parameters
-        log_error("Session: " . json_encode($_SESSION));
-        log_error("Query Parameters: Date=" . $date . ", Status=" . $status);
+        // log_error("Session: " . json_encode($_SESSION));
+        // log_error("Query Parameters: Date=" . $date . ", Status=" . $status);
 
         try {
             if ($role === 'admin') {
@@ -100,7 +101,7 @@ if ($method === 'POST') {
                     $params[] = $status;
                 }
                 $query .= " ORDER BY r.reservation_time DESC";
-                log_error("SQL Query: " . $query . " | Params: " . json_encode($params));
+                // log_error("SQL Query: " . $query . " | Params: " . json_encode($params));
                 $stmt = $pdo->prepare($query);
                 $stmt->execute($params);
                 $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -117,7 +118,7 @@ if ($method === 'POST') {
                     $params[] = $status;
                 }
                 $query .= " ORDER BY reservation_time DESC";
-                log_error("SQL Query: " . $query . " | Params: " . json_encode($params));
+                // log_error("SQL Query: " . $query . " | Params: " . json_encode($params));
                 $stmt = $pdo->prepare($query);
                 $stmt->execute($params);
                 $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);

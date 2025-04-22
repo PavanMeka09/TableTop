@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="../assets/images/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="../assets/js/checkSession.js"></script>
+    <script src="../js/checkSessionUser.js"></script>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
     <nav class="bg-white shadow-md sticky top-0 z-40 mb-8">
@@ -17,7 +17,7 @@
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
                     <h1 class="text-2xl font-bold text-amber-600">TableTop</h1>
                 </a>
-                <div class="hidden md:flex items-center space-x-20 text-lg font-medium">
+                <div class="hidden md:flex items-center space-x-14 text-lg font-medium ml-auto">
                     <a href="../index.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-home"></i> Home</a>
                     <a href="menu.html" class="text-amber-600 font-semibold border-amber-600 flex items-center gap-1"><i class="fa-solid fa-list"></i>Menu</a>
                     <a href="reservations.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-calendar"></i>Reservations</a>
@@ -44,6 +44,7 @@
                   id="searchInput" 
                   placeholder="Search dishes..." 
                   class="w-full p-4 pr-12 rounded-2xl border border-gray-300 bg-white text-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-sm transition duration-200"
+                  autocomplete="off"
                 />
                 <button 
                   id="clearSearch" 
@@ -55,7 +56,7 @@
               </div>
             </div>
           </div>          
-        <div class="" id="menuItems"></div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="menuItems"></div>
         <div class="fixed bottom-4 right-4 bg-white p-6 rounded-2xl shadow-2xl w-96 max-w-full border border-gray-100 z-50" id="orderSummary">
             <h3 class="text-lg mb-2 font-semibold flex items-center"><i class="fas fa-receipt text-amber-600 mr-2"></i>Order Summary (<span id="basketCount">0</span>)</h3>
             <div id="basketItems" class="max-h-56 overflow-y-auto mb-4"></div>
@@ -98,13 +99,13 @@
                 container.appendChild(div);
             });
         }
-
+        
         fetch('../backend/menu.php?action=get_menu')
             .then(res => res.json())
             .then(data => {
                 renderMenuItems(data.data);
             });
     </script>
-    <script src="../assets/js/menu.js"></script>
+    <script src="../js/menu.js"></script>
 </body>
 </html>

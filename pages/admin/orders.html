@@ -6,33 +6,33 @@
   <title>Orders | Admin</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="../../js/checkSessionAdmin.js"></script>
 </head>
 <body class="bg-gray-50">
-  <nav class="bg-white shadow-md sticky top-0 z-50">
+  <nav class="bg-white shadow-md sticky top-0 z-40 mb-8">
     <div class="container mx-auto px-8">
         <div class="flex justify-between items-center py-4">
             <a href="dashboard.html" class="flex items-center space-x-2">
                 <i class="fas fa-utensils text-amber-600 text-2xl"></i>
                 <h1 class="text-2xl font-bold text-amber-600">TableTop Admin</h1>
             </a>
-            <div class="hidden md:flex items-center space-x-8 text-lg font-medium">
-                <a href="dashboard.html" class="hover:text-amber-600 transition-colors">Dashboard</a>
-                <a href="menu.html" class="hover:text-amber-600 transition-colors">Menu</a>
-                <a href="orders.html" class="hover:text-amber-600 transition-colors">Orders</a>
-                <a href="reservations.html" class="hover:text-amber-600 transition-colors">Reservations</a>
-                <a href="feedback.html" class="hover:text-amber-600 transition-colors">Feedback</a>
+            <div class="hidden md:flex items-center space-x-14 text-lg font-medium ml-auto">
+                <a href="dashboard.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-home"></i>Dashboard</a>
+                <a href="menu.html" class="hover:text-amber-600 font-semibold border-amber-600 flex items-center gap-1"><i class="fa-solid fa-list"></i>Menu</a>
+                <a href="reservations.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-calendar"></i>Reservations</a>
+                <a href="orders.html" class="text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-truck"></i>Orders</a>
+                <a href="feedback.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-comment"></i></i>Feedback</a>
             </div>
             <div class="flex items-center space-x-4">
-                <a href="../../pages/login.html" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md login-btn">Login</a>
-                <button id="mobile-menu-button" class="md:hidden text-gray-700"><i class="fas fa-bars text-2xl"></i></button>
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 cursor-pointer"><i class="fas fa-bars text-2xl"></i></button>
             </div>
         </div>
-        <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100 px-8">
-            <a href="dashboard.html" class="block py-2 text-amber-600 font-semibold border-b-2 border-amber-600">Dashboard</a>
-            <a href="menu.html" class="block py-2 hover:text-amber-600">Menu</a>
-            <a href="orders.html" class="block py-2 hover:text-amber-600">Orders</a>
-            <a href="reservations.html" class="block py-2 hover:text-amber-600">Reservations</a>
-            <a href="feedback.html" class="block py-2 hover:text-amber-600">Feedback</a>
+        <div id="mobile-menu" class="md:hidden hidden py-4 px-8 space-y-6 border-t-2 border-gray-200">
+            <a href="dashboard.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-home"></i>Dashboard</a>
+            <a href="menu.html" class="hover:text-amber-600 font-semibold border-amber-600 flex items-center gap-1"><i class="fa-solid fa-list"></i>Menu</a>
+            <a href="reservations.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-calendar"></i>Reservations</a>
+            <a href="orders.html" class="text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-truck"></i>Orders</a>
+            <a href="feedback.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-comment"></i></i>Feedback</a>
         </div>
     </div>
 </nav>
@@ -49,7 +49,7 @@
             <option value="on the way">On the Way</option>
             <option value="delivered">Delivered</option>
           </select>
-          <input type="date" id="dateFilter" 
+          <input type="date" id="dateFilter" autocomplete="off"
                  class="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-500">
         </div>
       </div>
@@ -65,51 +65,6 @@
       const mobileMenu = document.getElementById('mobile-menu');
       mobileMenu.classList.toggle('hidden');
     });
-
-    // Session check and UI update
-    async function checkSessionAndUpdateUI() {
-      const nav = document.querySelector('nav .flex.items-center.space-x-4');
-      let loginBtn = nav.querySelector('a.login-btn');
-      let logoutBtn = nav.querySelector('.logout-btn');
-      if (logoutBtn) logoutBtn.remove();
-      try {
-        const res = await fetch('../../backend/auth.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({ action: 'check_session' })
-        });
-        const data = await res.json();
-        if (data.logged_in && data.role === 'admin') {
-          if (loginBtn) loginBtn.style.display = 'none';
-          const logout = document.createElement('a');
-          logout.textContent = 'Logout';
-          logout.href = '#';
-          logout.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md logout-btn';
-          logout.onclick = async function(e) {
-            e.preventDefault();
-            await fetch('../../backend/auth.php', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-              body: new URLSearchParams({ action: 'logout' })
-            });
-            window.location.href = '../../index.html';
-          };
-          nav.appendChild(logout);
-        } else {
-          if (loginBtn) loginBtn.style.display = '';
-          window.location.href = '../../pages/login.html';
-        }
-      } catch (e) {
-        if (loginBtn) loginBtn.style.display = '';
-        window.location.href = '../../pages/login.html';
-      }
-    }
-    document.addEventListener('DOMContentLoaded', checkSessionAndUpdateUI);
-
-    // Toast feedback
-    function showToast(msg, type = 'info') {
-      alert(msg);
-    }
 
     // Set today's date as default for date filter
     document.getElementById('dateFilter').valueAsDate = new Date();
@@ -186,7 +141,7 @@
                   <div class="flex gap-4">
                     ${order.status !== 'delivered' ? `
                       <button onclick="updateOrderStatus(${order.id}, '${getNextStatus(order.status)}')"
-                              class="text-sm bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors">
+                              class="text-sm bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors cursor-pointer">
                         ${getStatusButtonText(order.status)}
                       </button>
                     ` : ''}
@@ -230,16 +185,16 @@
         });
         const data = await res.json();
         if (data.success) {
-          showToast('Order status updated!', 'success');
+          alert('Order status updated!');
           loadOrders(
             document.getElementById('statusFilter').value,
             document.getElementById('dateFilter').value
           );
         } else {
-          showToast(data.error || 'Failed to update order status', 'error');
+          alert(data.error || 'Failed to update order status');
         }
       } catch (error) {
-        showToast('Failed to update order status', 'error');
+        alert('Failed to update order status');
       }
     }
 

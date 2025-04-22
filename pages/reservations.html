@@ -6,61 +6,31 @@
     <title>TableTop | Reservations</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="../assets/js/checkSession.js"></script>
-    <style>
-        /* Custom styles for hover effects and responsive design */
-        .interactive-element {
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .time-slot {
-            transition: all 0.2s ease;
-        }
-        
-        .time-slot:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        
-        .table-option {
-            transition: all 0.2s ease;
-        }
-        
-        .table-option:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-        
-        .selected {
-            border: 2px solid #d97706;
-            background-color: #fffbeb;
-        }
-    </style>
+    <script src="../js/checkSessionUser.js"></script>
 </head>
 <body class="bg-gray-100">
     <nav class="bg-white shadow-md sticky top-0 z-40 mb-8">
-        <div class="container mx-auto px-4 sm:px-8">
+        <div class="container mx-auto px-8">
             <div class="flex justify-between items-center py-4">
-                <a href="../index.html" class="flex items-center space-x-2 interactive-element">
+                <a href="../index.html" class="flex items-center space-x-2">
                     <i class="fas fa-utensils text-amber-600 text-2xl"></i>
                     <h1 class="text-2xl font-bold text-amber-600">TableTop</h1>
                 </a>
-                <div class="hidden md:flex items-center space-x-8 text-lg font-medium">
-                    <a href="../index.html" class="hover:text-amber-600 transition-colors flex items-center gap-1 interactive-element"><i class="fas fa-home"></i> Home</a>
-                    <a href="menu.html" class="hover:text-amber-600 transition-colors interactive-element">Menu</a>
-                    <a href="reservations.html" class="text-amber-600 font-semibold border-b-2 border-amber-600">Reservations</a>
-                    <a href="trackorder.html" class="hover:text-amber-600 transition-colors flex items-center gap-1 interactive-element"><i class="fas fa-truck"></i> Track Order</a>
+                <div class="hidden md:flex items-center space-x-14 text-lg font-medium ml-auto">
+                    <a href="../index.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-home"></i> Home</a>
+                    <a href="menu.html" class="hover:text-amber-600 font-semibold border-amber-600 flex items-center gap-1"><i class="fa-solid fa-list"></i>Menu</a>
+                    <a href="reservations.html" class="text-amber-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-calendar"></i>Reservations</a>
+                    <a href="trackorder.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-truck"></i> Track Order</a>
                 </div>
                 <div class="flex items-center space-x-4">
-                    <button id="mobile-menu-button" class="md:hidden text-gray-700 interactive-element"><i class="fas fa-bars text-2xl"></i></button>
+                    <button id="mobile-menu-button" class="md:hidden text-gray-700 cursor-pointer"><i class="fas fa-bars text-2xl"></i></button>
                 </div>
             </div>
-            <div id="mobile-menu" class="md:hidden hidden py-4 border-t border-gray-100 px-4 sm:px-8">
-                <a href="../index.html" class="block py-2 text-gray-700 hover:text-amber-600 flex items-center gap-1 interactive-element"><i class="fas fa-home"></i> Home</a>
-                <a href="menu.html" class="block py-2 text-gray-700 hover:text-amber-600 interactive-element">Menu</a>
-                <a href="reservations.html" class="block py-2 text-amber-600 font-semibold border-b border-amber-600">Reservations</a>
-                <a href="trackorder.html" class="block py-2 text-gray-700 hover:text-amber-600 flex items-center gap-1 interactive-element"><i class="fas fa-truck"></i> Track Order</a>
+            <div id="mobile-menu" class="md:hidden hidden py-4 px-8 space-y-6 border-t-2 border-gray-200">
+                <a href="../index.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-home"></i> Home</a>
+                <a href="menu.html" class="hover:text-amber-600 font-semibold border-amber-600 flex items-center gap-1"><i class="fa-solid fa-list"></i>Menu</a>
+                <a href="reservations.html" class="text-amber-600 transition-colors flex items-center gap-1"><i class="fa-solid fa-calendar"></i>Reservations</a>
+                <a href="trackorder.html" class="hover:text-amber-600 transition-colors flex items-center gap-1"><i class="fas fa-truck"></i> Track Order</a>
             </div>
         </div>
     </nav>
@@ -70,7 +40,7 @@
         <div class="max-w-4xl mx-auto mb-8 bg-white p-6 rounded-lg shadow">
             <h2 class="text-2xl font-bold mb-4 text-center">Select Reservation Date</h2>
             <div class="flex justify-center">
-                <input type="date" id="reservationDate" class="w-full max-w-xs p-3 rounded-lg border mb-4 text-sm cursor-pointer focus:ring-2 focus:ring-amber-500 focus:border-transparent interactive-element" min="{{today}}">
+                <input type="date" id="reservationDate" class="w-full max-w-xs p-3 rounded-lg border mb-4 text-sm cursor-pointer focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-300" min="{{today}}" autocomplete="off">
             </div>
         </div>
         
@@ -101,14 +71,20 @@
         });
         
         // Time slots config
+        // Each slot is now an object with start and end
         const TIME_SLOTS = [
-            '18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00'
+            { start: '18:00', end: '19:00' },
+            { start: '19:00', end: '20:00' },
+            { start: '20:00', end: '21:00' },
+            { start: '21:00', end: '22:00' }
         ];
         const TABLE_COUNT = 10;
-        let selectedTime = null;
+        let selectedSlot = null;
         let selectedTable = null;
-        
-        // Convert 24-hour time slots to 12-hour format
+        let bookedTablesBySlot = {};
+        let bookedTablesByTime = {}; // Added to handle the API response format
+
+        // Convert 24-hour time to 12-hour format
         function convertTo12HourFormat(time) {
             const [hour, minute] = time.split(':');
             const hourInt = parseInt(hour);
@@ -117,29 +93,40 @@
             return `${hour12}:${minute} ${period}`;
         }
 
-        function renderTimeSlots(bookedTimes = []) {
+        function renderTimeSlots() {
             const container = document.getElementById('timeSlots');
             container.innerHTML = '';
-            
             TIME_SLOTS.forEach(slot => {
-                const btn = document.createElement('button');
-                btn.className = 'bg-white p-3 rounded-lg shadow text-center hover:shadow-md text-base time-slot interactive-element w-24';
-                btn.textContent = convertTo12HourFormat(slot);
-                btn.dataset.time = slot;
-                btn.disabled = bookedTimes.includes(slot + ':00');
+                const slotKey = slot.start + '-' + slot.end;
+                // Check time with and without seconds
+                const timeKey = slot.start + ':00';
+                const timeKeyNoSeconds = slot.start;
                 
-                if (btn.disabled) {
+                // Check if the time slot is fully booked
+                const bookedTables = bookedTablesByTime[timeKey] || bookedTablesByTime[timeKeyNoSeconds] || [];
+                const isFullyBooked = bookedTables.length === TABLE_COUNT;
+                
+                const btn = document.createElement('button');
+                btn.className = 'bg-white p-3 rounded-lg shadow text-center hover:shadow-md text-base w-44 cursor-pointer transition-all duration-200';
+                btn.textContent = `${convertTo12HourFormat(slot.start)} to ${convertTo12HourFormat(slot.end)}`;
+                btn.dataset.slot = slotKey;
+                btn.dataset.timeKey = timeKey;
+                btn.disabled = isFullyBooked;
+                
+                if (isFullyBooked) {
                     btn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-gray-100');
                     btn.innerHTML += '<div class="text-red-600 text-xs mt-1">Booked</div>';
-                } else if (selectedTime === slot) {
-                    btn.classList.add('selected');
+                } else if (selectedSlot && selectedSlot.start === slot.start && selectedSlot.end === slot.end) {
+                    btn.classList.add('border-2', 'border-amber-600', 'bg-amber-50');
                 }
                 
-                btn.onclick = () => selectTime(slot);
+                if (!isFullyBooked) {
+                    btn.onclick = () => selectTimeSlot(slot, timeKey);
+                }
                 container.appendChild(btn);
             });
         }
-        
+
         function fetchBookedTimes() {
             const date = document.getElementById('reservationDate').value;
             fetch('../backend/reservation.php', {
@@ -149,41 +136,56 @@
             })
             .then(res => res.json())
             .then(data => {
-                if (data.booked_times) {
-                    renderTimeSlots(data.booked_times);
-                } else {
-                    renderTimeSlots([]);
-                }
+                console.log('Received booking data:', data);
+                
+                // Store both formats of data for compatibility
+                bookedTablesByTime = data.booked_tables_by_time || {};
+                bookedTablesBySlot = data.booked_tables_by_slot || {};
+                
+                renderTimeSlots();
+            })
+            .catch(error => {
+                console.error('Error fetching booked times:', error);
+                bookedTablesByTime = {};
+                bookedTablesBySlot = {};
+                renderTimeSlots();
             });
         }
-        
-        function selectTime(time) {
-            selectedTime = time;
+
+        function selectTimeSlot(slot, timeKey) {
+            selectedSlot = slot;
+            selectedSlot.timeKey = timeKey; // Store the time key for later use
             document.getElementById('tableSelection').classList.remove('hidden');
             document.getElementById('confirmationMsg').classList.add('hidden');
             
             // Update selected time visual state
             const timeButtons = document.querySelectorAll('#timeSlots button');
             timeButtons.forEach(button => {
-                if (button.dataset.time === time) {
-                    button.classList.add('selected');
+                if (button.dataset.slot === slot.start + '-' + slot.end) {
+                    button.classList.add('border-2', 'border-amber-600', 'bg-amber-50');
                 } else {
-                    button.classList.remove('selected');
+                    button.classList.remove('border-2', 'border-amber-600', 'bg-amber-50');
                 }
             });
             
             renderTables();
-            fetchBookedTables();
         }
-        
-        function renderTables(bookedTables = []) {
+
+        function renderTables() {
             const grid = document.getElementById('tablesGrid');
             grid.innerHTML = '';
             
+            if (!selectedSlot) return;
+            
+            // Get booked tables for this time slot
+            const timeKey = selectedSlot.timeKey;
+            const bookedTables = bookedTablesByTime[timeKey] || [];
+            
             for (let i = 1; i <= TABLE_COUNT; i++) {
                 const btn = document.createElement('button');
-                btn.className = 'bg-white p-4 rounded-lg shadow text-center hover:shadow-md table-option interactive-element w-36 h-24 flex flex-col items-center justify-center';
-                const isBooked = bookedTables.includes(i.toString());
+                btn.className = 'bg-white p-4 rounded-lg shadow text-center hover:shadow-md w-36 h-24 flex flex-col items-center justify-center cursor-pointer transition-all duration-200';
+                
+                const isBooked = bookedTables.includes(i);
                 btn.disabled = isBooked;
                 btn.dataset.table = i;
                 
@@ -194,7 +196,7 @@
                         <span class="text-red-600 text-sm">Booked</span>
                     `;
                 } else if (selectedTable === i) {
-                    btn.classList.add('selected');
+                    btn.classList.add('border-2', 'border-amber-600', 'bg-amber-50');
                     btn.innerHTML = `
                         <h3 class="font-bold">Table ${i}</h3>
                         <span class="text-green-600 text-sm">Selected</span>
@@ -207,51 +209,15 @@
                 }
                 
                 if (!isBooked) {
-                    btn.onclick = () => selectTable(i);
+                    btn.onclick = () => showConfirmation(i);
                 }
                 grid.appendChild(btn);
             }
         }
-        
-        function fetchBookedTables() {
+
+        function showConfirmation(tableNumber) {
             const date = document.getElementById('reservationDate').value;
-            if (!selectedTime) return;
-            
-            fetch('../backend/reservation.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ action: 'get_booked_tables', date, time: selectedTime })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.booked_tables) {
-                    renderTables(data.booked_tables);
-                } else {
-                    renderTables([]);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching booked tables:', error);
-                renderTables([]);
-            });
-        }
-        
-        async function selectTable(tableNumber) {
-            const date = document.getElementById('reservationDate').value;
-            if (!date || !selectedTime) return;
-            
-            // Check if table is already booked
-            const bookedTables = await fetch('../backend/reservation.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ action: 'get_booked_tables', date, time: selectedTime })
-            }).then(res => res.json()).then(data => data.booked_tables || []);
-            
-            if (bookedTables.includes(tableNumber.toString())) {
-                // If table is booked, just refresh the display
-                renderTables(bookedTables);
-                return;
-            }
+            if (!date || !selectedSlot) return;
             
             const formattedDate = new Date(date).toLocaleDateString('en-US', { 
                 weekday: 'long', 
@@ -260,11 +226,27 @@
                 day: 'numeric' 
             });
             
-            const reservation_time = date + ' ' + selectedTime + ':00';
+            const confirmMessage = `Are you sure you want to book Table ${tableNumber} on ${formattedDate} from ${convertTo12HourFormat(selectedSlot.start)} to ${convertTo12HourFormat(selectedSlot.end)}?`;
+            
+            if (window.confirm(confirmMessage)) {
+                selectedTable = tableNumber;
+                renderTables(); // Update visual selection
+                bookTable(tableNumber);
+            }
+        }
+
+        async function bookTable(tableNumber) {
+            const date = document.getElementById('reservationDate').value;
+            if (!date || !selectedSlot) return;
+            
+            const reservation_start = date + ' ' + selectedSlot.start + ':00';
+            const reservation_end = date + ' ' + selectedSlot.end + ':00';
+            
             const data = new URLSearchParams({
                 action: 'create_reservation',
                 table_number: tableNumber,
-                reservation_time
+                reservation_start,
+                reservation_end
             });
             
             document.getElementById('tableFeedback').textContent = 'Booking table...';
@@ -275,62 +257,69 @@
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: data
                 });
+                
                 const result = await response.json();
                 
                 if (result.success) {
-                    selectedTable = tableNumber;
+                    const formattedDate = new Date(date).toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    
                     document.getElementById('confirmationText').innerHTML = `
-                        Your reservation for Table ${tableNumber} on ${formattedDate} at ${convertTo12HourFormat(selectedTime)} has been confirmed!
+                        Your reservation for Table ${tableNumber} on ${formattedDate} from ${convertTo12HourFormat(selectedSlot.start)} to ${convertTo12HourFormat(selectedSlot.end)} has been confirmed!
                         <div class="mt-4">
-                            <button onclick="startNewReservation()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors interactive-element mt-2">
+                            <button onclick="startNewReservation()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors mt-2">
                                 Make Another Reservation
                             </button>
                         </div>
                     `;
+                    
                     document.getElementById('confirmationMsg').classList.remove('hidden');
                     document.getElementById('tableFeedback').textContent = '';
                     document.getElementById('tableSelection').classList.add('hidden');
                     
-                    // Refresh the tables display to show the new booking
-                    fetchBookedTables();
+                    // Update the booked tables data
+                    const timeKey = selectedSlot.timeKey;
+                    if (!bookedTablesByTime[timeKey]) {
+                        bookedTablesByTime[timeKey] = [];
+                    }
+                    bookedTablesByTime[timeKey].push(tableNumber);
+                    
                 } else {
                     document.getElementById('tableFeedback').textContent = result.error || 'Failed to make reservation';
+                    fetchBookedTimes(); // Refresh data in case of errors
                 }
             } catch (error) {
                 document.getElementById('tableFeedback').textContent = 'Failed to make reservation';
+                fetchBookedTimes(); // Refresh data in case of errors
             }
         }
-        
+
         function startNewReservation() {
-            selectedTime = null;
+            selectedSlot = null;
             selectedTable = null;
             document.getElementById('confirmationMsg').classList.add('hidden');
             document.getElementById('tableSelection').classList.add('hidden');
-            renderTimeSlots();
             fetchBookedTimes();
         }
-        
-        // Initialize
+
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('reservationDate').min = today;
-            document.getElementById('reservationDate').value = today;
-            
-            renderTimeSlots();
-            fetchBookedTimes();
-            
-            // Date change event
-            document.getElementById('reservationDate').addEventListener('change', function() {
-                selectedTime = null;
+            const dateInput = document.getElementById('reservationDate');
+            dateInput.min = today;
+            dateInput.value = today;
+            dateInput.addEventListener('change', function() {
+                selectedSlot = null;
                 selectedTable = null;
                 document.getElementById('tableSelection').classList.add('hidden');
                 document.getElementById('confirmationMsg').classList.add('hidden');
-                renderTimeSlots();
                 fetchBookedTimes();
             });
-            
-            // Expose startNewReservation to window
             window.startNewReservation = startNewReservation;
+            fetchBookedTimes();
         });
     </script>
 </body>

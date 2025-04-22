@@ -68,6 +68,10 @@ if ($method === 'POST') {
             echo json_encode(['error' => 'All fields are required.']);
             exit;
         }
+        if (strlen($password) < 6) {
+            echo json_encode(['error' => 'Password must be at least 6 characters long.']);
+            exit;
+        }
         // Check OTP
         if (!isset($_SESSION['otp']) || !isset($_SESSION['otp_email']) || $_SESSION['otp_email'] !== $email || $otp != $_SESSION['otp']) {
             echo json_encode(['error' => 'OTP verification failed.']);

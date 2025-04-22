@@ -46,8 +46,6 @@ function renderMenuItems(items) {
         menuItem.querySelector('.add-to-cart').addEventListener('click', () => addToCart(item.id, item.name, item.price));
         menuContainer.appendChild(menuItem);
     });
-    // Adjust grid gap for better spacing
-    menuContainer.className = 'flex flex-wrap gap-10';
 }
 
 // Add to cart logic
