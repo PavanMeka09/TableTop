@@ -1,4 +1,7 @@
-// Menu functionality
+document.getElementById('mobile-menu-button').addEventListener('click', function() {
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenu.classList.toggle('hidden');
+  });
 
 let allMenuItems = [];
 let cart = [];
@@ -6,7 +9,7 @@ let cart = [];
 // Fetch menu items and store for search
 async function fetchMenuItems() {
     try {
-        const response = await fetch('../backend/menu.php');
+        const response = await fetch('http://localhost/tabletop/backend/menu.php');
         const data = await response.json();
         if (data.status === 'error') {
             alert(data.message);
@@ -193,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
         checkoutBtn.addEventListener('click', async function(e) {
             e.preventDefault();
             if (cart.length === 0 || !isAddressValid()) {
-                showToast('Address is required.', 'error');
+                alert('Address is required.');
                 return;
             }
             checkoutBtn.disabled = true;
@@ -203,14 +206,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const address = addressInput.value.trim();
             try {
                 // 1. Create Razorpay order on backend
-                const orderRes = await fetch('../backend/payment.php', {
+                const orderRes = await fetch('http://localhost/tabletop/backend/payment.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({ action: 'create_razorpay_order', items: JSON.stringify(items), address })
                 });
                 const orderData = await orderRes.json();
                 if (orderData.error || !orderData.razorpay_order_id) {
-                    showToast(orderData.error || 'Failed to initiate payment.', 'error');
+                    alert(orderData.error || 'Failed to initiate payment.');
                     checkoutBtn.disabled = false;
                     checkoutBtn.textContent = 'Checkout';
                     return;
@@ -226,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     handler: async function (response) {
                         // 3. On payment success, notify backend to place order and record payment
                         try {
-                            const payRes = await fetch('../backend/payment.php', {
+                            const payRes = await fetch('http://localhost/tabletop/backend/payment.php', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                                 body: new URLSearchParams({
@@ -240,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             });
                             const payData = await payRes.json();
                             if (payData.success) {
-                                showToast('Payment successful! Order placed.', 'success');
+                                alert('Payment successful! Order placed.', 'success');
                                 cart = [];
                                 saveCart();
                                 updateCartUI();
@@ -250,10 +253,10 @@ document.addEventListener('DOMContentLoaded', function() {
                                 if (msg.includes('Failed to place order after payment')) {
                                     msg += '\nIf this keeps happening, please contact support.';
                                 }
-                                showToast(msg, 'error');
+                                alert(msg);
                             }
                         } catch (err) {
-                            showToast('Payment verification error.', 'error');
+                            alert('Payment verification error.');
                         }
                     },
                     prefill: {},
@@ -262,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const rzp = new window.Razorpay(options);
                 rzp.open();
             } catch (error) {
-                showToast('Failed to initiate payment.', 'error');
+                alert('Failed to initiate payment.');
             }
             checkoutBtn.disabled = false;
             checkoutBtn.textContent = 'Checkout';
@@ -282,18 +285,13 @@ function loadCart() {
     cart = c ? JSON.parse(c) : [];
 }
 
-// User-friendly toast feedback
-function showToast(msg, type = 'info') {
-    alert(msg);
-}
-
 // Inline feedback system for payment initiation
 function initiatePayment(paymentData) {
     const feedbackElement = document.getElementById('feedbackMessage');
     feedbackElement.textContent = 'Initiating payment...';
     feedbackElement.className = 'text-blue-600';
 
-    fetch('/backend/payment.php', {
+    fetch('http://localhost/tabletop/backend/payment.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(paymentData)

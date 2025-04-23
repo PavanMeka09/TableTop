@@ -6,7 +6,6 @@
   <title>Reservations | Admin</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <script src="../../js/main.js"></script>
 </head>
 <body class="bg-gray-50">
   <nav class="bg-white shadow-md sticky top-0 z-40 mb-8">
@@ -101,7 +100,7 @@
     };
 
     function loadReservations() {
-      fetch('../../backend/reservation.php', {
+      fetch('http://localhost/tabletop/backend/reservation.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({
@@ -175,7 +174,7 @@
       if (!window.confirm(`Are you sure you want to ${actionText} this reservation?`)) {
         return;
       }
-      fetch('../../backend/reservation.php', {
+      fetch('http://localhost/tabletop/backend/reservation.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-      const res = await fetch('http://localhost/tabletop//backend/auth.php', {
+      const res = await fetch('http://localhost/tabletop/backend/auth.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams({ action: 'check_session' })

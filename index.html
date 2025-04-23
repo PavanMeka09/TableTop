@@ -6,6 +6,7 @@
     <title>TableTop | Fine Dining Restaurant</title>
     <link rel="icon" type="image/png" href="assets/images/favicon.png">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="js/index.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
@@ -138,8 +139,8 @@
         </div>
     </section>
 
-    <section class="py-20 bg-cover bg-center relative" style="background-image: url('assets/images/restaurant-interior.jpg')">
-        <div class="absolute inset-0 bg-black bg-opacity-70"></div>
+    <section class="py-20 bg-cover bg-center relative" style="background-image: url('https://c4.wallpaperflare.com/wallpaper/333/450/570/restaurant-table-interior-modern-wallpaper-preview.jpg')">
+        <div class="absolute inset-0 bg-[rgba(0,0,0,0.7)] backdrop-blur"></div>
         <div class="container mx-auto px-4 relative z-10">
             <h3 class="text-3xl font-bold text-center mb-16 text-white relative">
                 <span class="inline-block border-b-4 border-amber-500 pb-2">What Our Guests Say</span>
@@ -252,59 +253,5 @@
             <p>&copy; 2025 TableTop. All rights reserved.</p>
         </div>
     </footer>
-    
-    <script>
-        function handleLogout(e) {
-            e.preventDefault();
-            fetch('backend/auth.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ action: 'logout' })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.reload();
-                }
-            })
-            .catch(error => console.error('Logout error:', error));
-        }
-
-        function updateAuthUI() {
-            const nav = document.querySelector('nav .flex.items-center.space-x-4');
-            const loginBtn = nav.querySelector('.login-btn');
-            const logoutBtn = nav.querySelector('.logout-btn');
-
-            fetch('backend/auth.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: new URLSearchParams({ action: 'check_session' })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.logged_in) {
-                    if (loginBtn) loginBtn.style.display = 'none';
-                    if (!logoutBtn) {
-                        const logout = document.createElement('a');
-                        logout.textContent = 'Logout';
-                        logout.href = '#';
-                        logout.className = 'bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg transition-colors logout-btn cursor-pointer';
-                        logout.onclick = handleLogout;
-                        nav.appendChild(logout);
-                    }
-                } else {
-                    if (loginBtn) loginBtn.style.display = '';
-                    if (logoutBtn) logoutBtn.remove();
-                }
-            })
-            .catch(error => {
-                console.error('Auth check failed:', error);
-                if (loginBtn) loginBtn.style.display = '';
-                if (logoutBtn) logoutBtn.remove();
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', updateAuthUI);
-    </script>
 </body>
 </html>
