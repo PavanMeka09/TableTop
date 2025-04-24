@@ -4,10 +4,6 @@ require_once 'config.php';
 
 header('Content-Type: application/json');
 
-function log_error($msg) {
-    error_log($msg, 3, __DIR__ . '/../error.log');
-}
-
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'GET') {
@@ -54,7 +50,6 @@ if ($method === 'GET') {
             $stmt->execute([$name, $description, $price, $image_url]);
             echo json_encode(['status' => 'success', 'message' => 'Menu item added successfully.']);
         } catch (PDOException $e) {
-            log_error($e->getMessage());
             echo json_encode(['status' => 'error', 'message' => 'Failed to add menu item.']);
         }
     } elseif ($action === 'update_menu_item') {
@@ -79,7 +74,6 @@ if ($method === 'GET') {
             $stmt->execute([$name, $description, $price, $image_url, $id]);
             echo json_encode(['success' => 'Menu item updated successfully.']);
         } catch (PDOException $e) {
-            log_error($e->getMessage());
             echo json_encode(['error' => 'Failed to update menu item.']);
         }
     } elseif ($action === 'delete_menu_item') {
@@ -100,7 +94,6 @@ if ($method === 'GET') {
             $stmt->execute([$id]);
             echo json_encode(['success' => 'Menu item deleted successfully.']);
         } catch (PDOException $e) {
-            log_error($e->getMessage());
             echo json_encode(['error' => 'Failed to delete menu item.']);
         }
     } else {

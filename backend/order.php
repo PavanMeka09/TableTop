@@ -4,10 +4,6 @@ require_once 'config.php';
 
 header('Content-Type: application/json');
 
-function log_error($msg) {
-    error_log($msg, 3, __DIR__ . '/../error.log');
-}
-
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'POST') {
@@ -71,7 +67,6 @@ if ($method === 'POST') {
             echo json_encode(['success' => 'Order placed successfully.', 'order_id' => $order_id]);
         } catch (PDOException $e) {
             $pdo->rollBack();
-            log_error($e->getMessage());
             echo json_encode(['error' => 'Failed to place order.']);
         }
     } elseif ($action === 'update_status') {
@@ -137,7 +132,6 @@ if ($method === 'POST') {
                 'reservations' => $reservations
             ]);
         } catch (PDOException $e) {
-            log_error('get_orders SQL error: ' . $e->getMessage());
             echo json_encode(['error' => 'Failed to fetch orders. SQL: ' . $e->getMessage()]);
         }
         exit;

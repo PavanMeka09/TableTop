@@ -4,11 +4,6 @@ require_once 'config.php';
 
 header('Content-Type: application/json');
 
-
-function log_error($msg) {
-    error_log($msg, 3, __DIR__ . '/../error.log');
-}
-
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'POST') {
@@ -59,7 +54,6 @@ if ($method === 'POST') {
             $stmt->execute([$user_id, $order_id, $message, $rating]);
             echo json_encode(['success' => 'Feedback submitted successfully.']);
         } catch (PDOException $e) {
-            log_error($e->getMessage());
             echo json_encode(['error' => 'Failed to submit feedback.', 'debug' => $e->getMessage()]);
         }
     } else {
@@ -83,7 +77,6 @@ if ($method === 'POST') {
 
             echo json_encode(['feedbackGiven' => $feedbackExists > 0]);
         } catch (PDOException $e) {
-            log_error($e->getMessage());
             echo json_encode(['error' => 'Failed to check feedback status.']);
         }
     } elseif ($action === 'get_feedback_status') {
@@ -101,7 +94,6 @@ if ($method === 'POST') {
 
             echo json_encode(['feedbackExists' => $feedbackExists > 0]);
         } catch (PDOException $e) {
-            log_error($e->getMessage());
             echo json_encode(['error' => 'Failed to check feedback status.']);
         }
     } elseif ($action === 'get_feedback') {
@@ -115,7 +107,6 @@ if ($method === 'POST') {
             $feedback = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode($feedback);
         } catch (PDOException $e) {
-            log_error("Database error: " . $e->getMessage()); // Log detailed error
             echo json_encode(['error' => 'Failed to fetch feedback.']);
         }
     } else {

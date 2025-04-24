@@ -4,9 +4,6 @@ require_once 'config.php';
 
 header('Content-Type: application/json');
 
-function log_error($msg) {
-    error_log($msg, 3, __DIR__ . '/../error.log');
-}
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     echo json_encode(['error' => 'Unauthorized access.']);
@@ -31,7 +28,6 @@ if ($method === 'GET') {
             }
             echo json_encode(['success' => true, 'data' => $orders]);
         } catch (PDOException $e) {
-            log_error('Failed to get orders: ' . $e->getMessage());
             echo json_encode(['success' => false, 'error' => 'Failed to get orders.']);
         }
     } elseif ($action === 'get_all_reservations') {
@@ -40,7 +36,6 @@ if ($method === 'GET') {
             $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode(['success' => true, 'data' => $reservations]);
         } catch (PDOException $e) {
-            log_error('Failed to get reservations: ' . $e->getMessage());
             echo json_encode(['success' => false, 'error' => 'Failed to get reservations.']);
         }
     } elseif ($action === 'get_all_feedback') {
@@ -49,7 +44,6 @@ if ($method === 'GET') {
             $feedback = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode(['success' => true, 'data' => $feedback]);
         } catch (PDOException $e) {
-            log_error('Failed to get feedback: ' . $e->getMessage());
             echo json_encode(['success' => false, 'error' => 'Failed to get feedback.']);
         }
     } elseif ($action === 'get_quick_stats') {
@@ -77,7 +71,6 @@ if ($method === 'GET') {
                 ]
             ]);
         } catch (PDOException $e) {
-            log_error('Failed to fetch quick stats: ' . $e->getMessage());
             echo json_encode(['success' => false, 'error' => 'Failed to fetch quick stats.']);
         }
     } else {

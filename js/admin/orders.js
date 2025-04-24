@@ -128,6 +128,7 @@ async function updateOrderStatus(orderId, newStatus) {
         document.getElementById('statusFilter').value,
         document.getElementById('dateFilter').value
       );
+      location.reload();
     } else {
       alert(data.error || 'Failed to update order status');
     }

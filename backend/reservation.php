@@ -4,10 +4,6 @@ require_once 'config.php';
 
 header('Content-Type: application/json');
 
-function log_error($msg) {
-    error_log($msg, 3, __DIR__ . '/../error.log');
-}
-
 $method = $_SERVER['REQUEST_METHOD'];
 
 if ($method === 'POST') {
@@ -29,7 +25,6 @@ if ($method === 'POST') {
             exit;
         }
 
-        // Check for overlapping reservation for the same table
         $stmt = $pdo->prepare("SELECT COUNT(*) FROM reservations WHERE table_number = ? AND status != 'cancelled' AND ((reservation_time < ? AND DATE_ADD(reservation_time, INTERVAL 1 HOUR) > ?) OR (reservation_time >= ? AND reservation_time < ?))");
         $stmt->execute([$table_number, $reservation_end, $reservation_start, $reservation_start, $reservation_end]);
         if ($stmt->fetchColumn() > 0) {
@@ -42,7 +37,6 @@ if ($method === 'POST') {
             $stmt->execute([$user_id, $table_number, $reservation_start, $reservation_end]);
             echo json_encode(['success' => 'Reservation created successfully.']);
         } catch (PDOException $e) {
-            log_error($e->getMessage());
             echo json_encode(['error' => 'Failed to create reservation.']);
         }
     } elseif ($action === 'update_status') {
@@ -83,13 +77,8 @@ if ($method === 'POST') {
         $date = $_POST['date'] ?? null;
         $status = $_POST['status'] ?? null;
 
-        // Debugging: Log session and query parameters
-        // log_error("Session: " . json_encode($_SESSION));
-        // log_error("Query Parameters: Date=" . $date . ", Status=" . $status);
-
         try {
             if ($role === 'admin') {
-                // Admin: get all reservations, optionally filter by date and status
                 $query = "SELECT r.*, u.name as customer_name, u.email as customer_email FROM reservations r JOIN users u ON r.user_id = u.id WHERE 1=1";
                 $params = [];
                 if ($date && strtolower($date) !== 'all') {
@@ -101,7 +90,6 @@ if ($method === 'POST') {
                     $params[] = $status;
                 }
                 $query .= " ORDER BY r.reservation_time DESC";
-                // log_error("SQL Query: " . $query . " | Params: " . json_encode($params));
                 $stmt = $pdo->prepare($query);
                 $stmt->execute($params);
                 $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -118,14 +106,12 @@ if ($method === 'POST') {
                     $params[] = $status;
                 }
                 $query .= " ORDER BY reservation_time DESC";
-                // log_error("SQL Query: " . $query . " | Params: " . json_encode($params));
                 $stmt = $pdo->prepare($query);
                 $stmt->execute($params);
                 $reservations = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
             echo json_encode($reservations);
         } catch (PDOException $e) {
-            log_error("Database Error: " . $e->getMessage());
             echo json_encode(['error' => 'Failed to get reservations.']);
         }
     } elseif ($action === 'get_booked_times') {
@@ -139,7 +125,6 @@ if ($method === 'POST') {
             $stmt->execute([$date]);
             $bookings = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            // Group bookings by time slot
             $bookedTablesByTime = [];
             foreach ($bookings as $booking) {
                 $time = $booking['time'];
@@ -154,7 +139,6 @@ if ($method === 'POST') {
             echo json_encode(['error' => 'Failed to fetch booked times.']);
         }
     } elseif ($action === 'get_booked_tables') {
-        // Get all booked tables for a given date and time (returns array of table numbers)
         $date = $_POST['date'] ?? null;
         $time = $_POST['time'] ?? null;
         if (!$date || !$time) {

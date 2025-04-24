@@ -6,10 +6,6 @@ use Razorpay\Api\Api;
 
 header('Content-Type: application/json');
 
-function log_error($msg) {
-    error_log($msg, 3, __DIR__ . '/../error.log');
-}
-
 $razorpay_key_id = 'rzp_test_M0ttAHjE4Tsx3R'; 
 $razorpay_key_secret = 'koUssWPtH2cXv4ItE0AnMlvh';
 
@@ -61,7 +57,6 @@ if ($method === 'POST') {
                 'razorpay_key_id' => $razorpay_key_id
             ]);
         } catch (Exception $e) {
-            log_error($e->getMessage());
             echo json_encode(['error' => 'Failed to create Razorpay order.']);
         }
         exit;
@@ -97,7 +92,6 @@ if ($method === 'POST') {
                 $stmt->execute([$menu_id]);
                 $menu_item = $stmt->fetch(PDO::FETCH_ASSOC);
                 if (!$menu_item) {
-                    log_error('Invalid menu item in payment.php verify_razorpay_payment: menu_id=' . $menu_id);
                     throw new Exception('Invalid menu item.');
                 }
                 $total_price += $menu_item['price'] * $quantity;
@@ -119,8 +113,6 @@ if ($method === 'POST') {
         } catch (Exception $e) {
             $pdo->rollBack();
             $errorMsg = 'Exception in payment.php verify_razorpay_payment: ' . $e->getMessage() . ' | user_id: ' . ($user_id ?? 'N/A') . ' | items: ' . json_encode($items);
-            log_error($errorMsg);
-            // In development, return the real error for debugging. Remove in production!
             $devMode = true; // Set to false in production
             if ($devMode) {
                 echo json_encode(['error' => 'Failed to place order after payment. Details: ' . $e->getMessage()]);
@@ -165,7 +157,6 @@ if ($method === 'POST') {
 
             echo json_encode(['success' => 'Payment processed successfully.']);
         } catch (PDOException $e) {
-            log_error($e->getMessage());
             echo json_encode(['error' => 'Failed to process payment.']);
         }
     } else {

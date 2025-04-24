@@ -1,15 +1,11 @@
 <?php
 session_start();
 require_once 'config.php';
-require_once __DIR__ . '/../vendor/autoload.php'; // PHPMailer
+require_once __DIR__ . '/../vendor/autoload.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 header('Content-Type: application/json');
-
-function log_error($msg) {
-    error_log($msg, 3, __DIR__ . '/../error.log');
-}
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -41,7 +37,6 @@ if ($method === 'POST') {
             $mail->send();
             echo json_encode(['success' => 'OTP sent to your email.']);
         } catch (Exception $e) {
-            log_error('PHPMailer error (OTP): ' . $mail->ErrorInfo);
             echo json_encode(['error' => 'Failed to send OTP.']);
         }
         exit;
@@ -86,7 +81,6 @@ if ($method === 'POST') {
             $stmt->execute([$name, $email, $hashedPassword]);
             echo json_encode(['success' => 'User registered successfully.']);
         } catch (PDOException $e) {
-            log_error($e->getMessage());
             echo json_encode(['error' => 'Email already exists.']);
         }
         exit;
