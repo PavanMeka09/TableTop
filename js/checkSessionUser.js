@@ -6,12 +6,12 @@ document.addEventListener('DOMContentLoaded', async () => {
           body: new URLSearchParams({ action: 'check_session' })
       });
       const data = await res.json();
-      if (data.role === 'admin') {
-          window.location.href = '/admin/dashboard.html';
-        } else if(!data.logged_in){
-          window.location.href = 'login.html';
+      if (data.role === 'admin'){
+        window.location.href = 'http://localhost/tabletop/pages/admin/dashboard.html';
+      } else if (!data.logged_in){
+        window.location.href = 'http://localhost/tabletop/pages/login.html';
       }
   } catch (e) {
-      window.location.href = 'login.html';
+      window.location.href = 'http://localhost/tabletop/pages/login.html';
   }
 });

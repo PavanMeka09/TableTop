@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       const data = await res.json();
       if (data.role === "user") {
-        window.location.href = '../../index.html';
+        window.location.href = 'http://localhost/tabletop/index.html';
       } else if (!data.logged_in){
-        window.location.href = '../login.html';
+        window.location.href = 'http://localhost/tabletop/pages/login.html';
       }
   } catch (e) {
-      window.location.href = '../login.html';
+      window.location.href = 'http://localhost/tabletop/pages/login.html';
   }
 });
