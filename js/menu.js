@@ -27,7 +27,7 @@ function renderMenuItems(items) {
     const menuContainer = document.getElementById('menuItems');
     menuContainer.innerHTML = '';
     items.forEach(item => {
-        const imgUrl = item.image_url ? (item.image_url.startsWith('/') ? item.image_url : item.image_url.replace('..','')) : 'https://via.placeholder.com/150';
+        const imgUrl = item.image_url;
         const menuItem = document.createElement('div');
         menuItem.className = 'bg-white rounded-xl shadow-md overflow-hidden menu-item border border-gray-100 w-full max-w-xs mx-auto transition-transform duration-300 ease-in-out hover:-translate-y-2';
         menuItem.innerHTML = `

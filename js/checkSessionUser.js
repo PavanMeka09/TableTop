@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams({ action: 'check_session' })
       });
-      const data = await res.jswon();
+      const data = await res.json();
       if (data.role === 'admin') {
           window.location.href = '/admin/dashboard.html';
         } else if(!data.logged_in){
