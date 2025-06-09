@@ -1,6 +1,6 @@
 # TableTop
 
-A web application for managing tabletop gaming sessions and events.
+A web platform for restaurants to manage online orders, table reservations, and delivery services.
 
 ## Project Structure
 
