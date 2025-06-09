@@ -2,10 +2,12 @@ function showSignup() {
   document.getElementById('loginForm').classList.add('hidden');
   document.getElementById('signupForm').classList.remove('hidden');
 }
+
 function showLogin() {
   document.getElementById('signupForm').classList.add('hidden');
   document.getElementById('loginForm').classList.remove('hidden');
 }
+
 function togglePassword(inputId, button) {
   const input = document.getElementById(inputId);
   const icon = button.querySelector('i');
@@ -17,6 +19,7 @@ function togglePassword(inputId, button) {
       icon.classList.replace('fa-eye-slash', 'fa-eye');
   }
 }
+
 async function sendOTP() {
   const email = document.getElementById('signupEmail').value.trim();
   if (!email) { alert('Please enter your email.'); return; }
@@ -36,12 +39,14 @@ async function sendOTP() {
       alert(data.error || 'Failed to send OTP.');
   }
 }
+
 function onOtpInput() {
   const otp = document.getElementById('otpInput').value;
   if (otp.length === 4) {
       document.getElementById('verifyOtpBtn').focus();
   }
 }
+
 async function verifyOTP() {
   const otp = document.getElementById('otpInput').value;
   const email = document.getElementById('signupEmail').value.trim();
@@ -62,6 +67,7 @@ async function verifyOTP() {
       alert(data.error || 'Invalid OTP.');
   }
 }
+
 async function handleLogin(e) {
   e.preventDefault();
   const email = document.getElementById('loginEmail').value;
@@ -86,6 +92,7 @@ async function handleLogin(e) {
       console.error('Error during login:', error);
   }
 }
+
 async function handleSignup(e) {
   e.preventDefault();
   const name = document.getElementById('signupName').value.trim();
